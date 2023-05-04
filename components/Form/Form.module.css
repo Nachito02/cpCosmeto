@@ -1,0 +1,9 @@
+.categoria {
+    position: relative;
+}
+
+.nombre_cat {
+    position: absolute;
+    top:55%;
+    left:15%;
+}

@@ -1,0 +1,24 @@
+{
+    "categories": [
+        {
+            "nombre": "Cejas",
+            "img": "/assets/categorias/cejas.jpg"
+        },
+        {
+            "nombre": "Cosmetologia",
+            "img": "/assets/categorias/cosmeto.jpg"
+        },
+        {
+            "nombre": "Lifting",
+            "img": "/assets/categorias/lifting.jpg"
+        },
+        {
+            "nombre": "Pedicuria",
+            "img": "/assets/categorias/pedicuria.jpg"
+        },
+        {
+            "nombre": "Cejas",
+            "img": "/assets/categorias/cejas.jpg"
+        }
+    ]
+}
