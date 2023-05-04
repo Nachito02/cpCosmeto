@@ -48,10 +48,10 @@ const Form = () => {
                             </>
                     }
 
-                    <div className=' mb-2 md:mb-0 md:grid md:grid-cols-3 md:gap-10  py-4'>
+                    <div className='  md:grid md:grid-cols-3 md:gap-10  py-4'>
 
                         {!service && categorias.categories.map((e, i) => (
-                            <div key={i} className='relative hover:scale-110 hover:cursor-pointer transition-all ease-in-out'
+                            <div key={i} className='mb-2 md:mb-0 relative hover:scale-110 hover:cursor-pointer transition-all ease-in-out'
                                 onClick={() => handleServiceClick(e.nombre)}
                                 data-service={e.nombre}
                             >
