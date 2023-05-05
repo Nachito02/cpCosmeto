@@ -8,8 +8,8 @@ const Nav = () => {
                
             </div>
             <nav className='flex justify-center gap-7 py-5'>
-                    <a href="">Reserva tu turno</a>
-                    <a href="">Servicios</a>
+                    <a href="/">Reserva tu turno</a>
+                    <a href="/servicios">Servicios</a>
                     <a href="">Productos</a>
                 </nav>
         </div>
