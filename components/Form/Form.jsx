@@ -6,12 +6,26 @@ import Image from "next/image";
 import categorias from "../../categorias/categorias.json";
 
 const Form = () => {
+  const arrayHorarios = [
+    "9:00",
+    "10:00",
+    "11:00",
+    "12:00",
+    "13:00",
+    "14:00",
+    "15:00",
+    "16:00",
+    "17:00",
+    "18:00",
+  ];
   const [value, setValue] = useState(new Date());
   const [service, setService] = useState(null);
   const [date, setDate] = useState(null);
   const [horario, setHorario] = useState(null);
+  const [nombre, setNombre] = useState("");
+  const [numero, setnumero] = useState("");
 
-  const handleClickDay = (e) => {
+  const handleClickDay = (e) => { 
     setDate(e);
   };
 
@@ -20,7 +34,7 @@ const Form = () => {
   }
 
   const disablePastDates = ({ date, view }) => {
-    if (date <= new Date()) {
+    if (date < new Date()) {
       return true;
     }
   };
@@ -54,7 +68,8 @@ const Form = () => {
           ) : (
             <>
               <label className="text-white" htmlFor="servicio">
-                Seleccionaste el servicio de : {service}
+                Seleccionaste el servicio de :{" "}
+                <span className="font-bold">{service}</span>
               </label>
               <button
                 className="bg-white px-2 py-2 text-black"
@@ -91,8 +106,9 @@ const Form = () => {
           </div>
           {service && (
             <div>
-              <p className="text-center">Selecciona una fecha</p>
+              <p className="text-center text-white">Selecciona una fecha</p>
               <Calendar
+                className={"mb-3"}
                 calendarType="US"
                 locale="es"
                 allowPartialRange={false}
@@ -102,54 +118,56 @@ const Form = () => {
                 }}
                 value={value}
                 selectRange={false}
-                tileDisabled={disablePastDates}
+                minDate={value}
               />
 
-              <label>Seleccione un horario</label>
               <div>
-                <div className="flex gap-2">
-                  <input
-                    type="radio"
-                    name="horario"
-                    value={"9:00"}
-                    onClick={(e) => {
-                      setHorario(e.target.value);
-                    }}
-                  />
-                  <p>9:00</p>
-                </div>
+                <p className="text-center text-white">Seleccione un horario</p>
+                <div className="text-white font-bold grid grid-cols-3  place-content-center">
 
-                <div className="flex gap-2">
-                  <input
-                    type="radio"
-                    name="horario"
-                    value={"10:00"}
-                    onClick={(e) => {
-                      setHorario(e.target.value);
-                    }}
-                  />
-                  <p>10:00</p>
-                </div>
+                  {arrayHorarios.map((horario,index) => {
+                      return <div key={index} className="flex gap-2 justify-center">
+                      <input
+                        type="radio"
+                        name="horario"
+                        value={horario}
+                        onClick={(e) => {
+                          setHorario(e.target.value);
+                        }}
+                      />
+                      <p>{horario}</p>
+                    </div>
+                  })}
 
-                <div className="flex gap-2">
-                  <input
-                    type="radio"
-                    name="horario"
-                    value={"11:00"}
-                    onClick={(e) => {
-                      setHorario(e.target.value);
-                    }}
-                  />
-                  <p>11:00</p>
                 </div>
               </div>
 
-              <button
-                type="submit"
-                className="flex justify-center bg-red-800 p-3 text-white"
-              >
-                Reserva tu turno
-              </button>
+              <div className="flex flex-col gap-2 mt-2 mb-3">
+                {horario && (
+                  <input
+                    className="p-2  outline-none"
+                    placeholder="Ingrese su nombre"
+                    value={nombre}
+                    onChange={(e) => setNombre(e.target.value)}
+                  />
+                )}
+                {horario && (
+                  <input
+                    className="p-2 outline-none "
+                    placeholder="Ingrese su numero de contacto"
+                    value={numero}
+                    onChange={(e) => setnumero(e.target.value)}
+                  />
+                )}
+              </div>
+
+              {horario && service && nombre.length > 3 && numero.length > 9 && (
+                <div className="flex justify-center">
+                  <button type="submit" className=" bg-red-800 p-3 text-white">
+                    Reserva tu turno
+                  </button>
+                </div>
+              )}
             </div>
           )}
         </form>
