@@ -9,9 +9,9 @@ const Nav = () => {
                
             </div>
             <nav className='flex justify-center gap-7 py-5'>
-                    <Link href="/">Reserva tu turno</a>
-                    <Link href="/servicios">Servicios</a>
-                    <Link href="">Productos</a>
+                    <Link href="/">Reserva tu turno</Link>
+                    <Link href="/servicios">Servicios</Link>
+                    <Link href="">Productos</Link>
                 </nav>
         </div>
     )
