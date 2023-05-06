@@ -1,5 +1,6 @@
 import React from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
 const Nav = () => {
     return (
         <div className='bg-white'>
@@ -8,9 +9,9 @@ const Nav = () => {
                
             </div>
             <nav className='flex justify-center gap-7 py-5'>
-                    <a href="/">Reserva tu turno</a>
-                    <a href="/servicios">Servicios</a>
-                    <a href="">Productos</a>
+                    <Link href="/">Reserva tu turno</a>
+                    <Link href="/servicios">Servicios</a>
+                    <Link href="">Productos</a>
                 </nav>
         </div>
     )
