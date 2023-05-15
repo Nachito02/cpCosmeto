@@ -1,11 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Head from "next/head";
 import "react-calendar/dist/Calendar.css";
 import Calendar from "react-calendar";
 import Image from "next/image";
 import categorias from "../../categorias/categorias.json";
+import clientAxios from "../../config/clientAxios";
 
-const Form = () => {
+export default function Form({services}) {
+
+  console.log(services)
+
   const arrayHorarios = [
     "9:00",
     "10:00",
@@ -19,6 +23,8 @@ const Form = () => {
     "18:00",
   ];
   const [value, setValue] = useState(new Date());
+  const [today] = useState(new Date());
+
   const [service, setService] = useState(null);
   const [date, setDate] = useState(null);
   const [horario, setHorario] = useState(null);
@@ -33,22 +39,22 @@ const Form = () => {
     setService(nombre);
   }
 
-  const disablePastDates = ({ date, view }) => {
-    if (date < new Date()) {
-      return true;
-    }
-  };
+ 
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    window.alert(
-      "confirmar el turno para" +
-        service +
-        " el dia" +
-        date.toLocaleDateString() +
-        " en el horario " +
-        horario
-    );
+    
+    try {
+      const response = await  clientAxios.post('/api/newShift', {
+        service,
+        nombre,
+        horario,
+        numero
+      })
+    }catch(error) {
+      console.log(error)
+    }
+    
   };
   return (
     <>
@@ -84,22 +90,22 @@ const Form = () => {
 
           <div className="  md:grid md:grid-cols-3 md:gap-10  py-4">
             {!service &&
-              categorias.categories.map((e, i) => (
+              services.map((e, i) => (
                 <div
                   key={i}
                   className="mb-2 md:mb-0 relative hover:scale-110 hover:cursor-pointer transition-all ease-in-out"
-                  onClick={() => handleServiceClick(e.nombre)}
-                  data-service={e.nombre}
+                  onClick={() => handleServiceClick(e.name)}
+                  data-service={e.name}
                 >
                   <Image
                     className="brightness-50 w-[300px] h-[300px]"
-                    src={e.img}
+                    src={e.img_service}
                     width={300}
                     height={300}
                     alt="categoria cejas"
                   />
                   <p className="absolute top-1/2 text-black text-xl left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white px-4 py-2 ">
-                    {e.nombre}
+                    {e.name}
                   </p>
                 </div>
               ))}
@@ -118,7 +124,7 @@ const Form = () => {
                 }}
                 value={value}
                 selectRange={false}
-                minDate={value}
+                minDate={today}
               />
 
               <div>
@@ -153,6 +159,7 @@ const Form = () => {
                 )}
                 {horario && (
                   <input
+                  type="number"
                     className="p-2 outline-none "
                     placeholder="Ingrese su numero de contacto"
                     value={numero}
@@ -176,4 +183,5 @@ const Form = () => {
   );
 };
 
-export default Form;
+
+
