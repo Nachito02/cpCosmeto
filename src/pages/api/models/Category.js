@@ -11,11 +11,6 @@ const categorySchema = new mongoose.Schema({
         required: true,
     },
 
-    price: {
-        type: Number,
-        required: true
-    },
-
     img_service: {
         type:String,
         require:true,
