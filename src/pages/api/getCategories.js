@@ -4,6 +4,8 @@ import Category from "./models/Category"
 
 export default async function handler(req, res) {
         try {
+            connectDB()
+
             const services = await Category.find()
             res.status(200).json(services)
         } catch (error) {

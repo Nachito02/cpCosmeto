@@ -9,6 +9,8 @@ export default async function handler(req, res) {
         console.log(req.body)
         if(req.method === 'POST') {
             try {
+             connectDB()
+
                 const services = await Service.find({category : req.body.categoryID})
                 res.status(200).json(services)
             } catch (error) {
