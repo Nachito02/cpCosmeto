@@ -3,12 +3,31 @@ import Head from "next/head";
 import "react-calendar/dist/Calendar.css";
 import Calendar from "react-calendar";
 import Image from "next/image";
-import categorias from "../../categorias/categorias.json";
 import clientAxios from "../../config/clientAxios";
+import ClipLoader from "react-spinners/ClipLoader";
 
-export default function Form({services}) {
+export default function Form({ categories }) {
+  const [value, setValue] = useState(new Date());
+  const [today] = useState(new Date());
+  const [expandedElement, setExpandedElement] = useState(null);
 
-  console.log(services)
+  const handleToggleDescription = (elementId) => {
+    if (expandedElement === elementId) {
+      setExpandedElement(null);
+    } else {
+      setExpandedElement(elementId);
+    }
+  };
+  const [loading, setLoading] = useState(false);
+  const [selectCategory, setSelectCategory] = useState(null);
+  const [date, setDate] = useState(null);
+  const [horario, setHorario] = useState(null);
+  const [nombre, setNombre] = useState("");
+  const [numero, setnumero] = useState("");
+  const [services, setServices] = useState([]);
+  useEffect(() => {
+    console.log(selectCategory);
+  }, [selectCategory]);
 
   const arrayHorarios = [
     "9:00",
@@ -22,39 +41,43 @@ export default function Form({services}) {
     "17:00",
     "18:00",
   ];
-  const [value, setValue] = useState(new Date());
-  const [today] = useState(new Date());
 
-  const [service, setService] = useState(null);
-  const [date, setDate] = useState(null);
-  const [horario, setHorario] = useState(null);
-  const [nombre, setNombre] = useState("");
-  const [numero, setnumero] = useState("");
-
-  const handleClickDay = (e) => { 
+  const handleClickDay = (e) => {
     setDate(e);
   };
 
-  function handleServiceClick(nombre) {
-    setService(nombre);
+  async function handleCategoryClick(element) {
+    setSelectCategory(element.name);
+
+    if (element) {
+      setLoading(true);
+      const response = await clientAxios.post("/api/getService", {
+        categoryID: element._id,
+      });
+
+      setServices(response.data);
+      setLoading(false);
+    }
   }
 
- 
+  const handleReset = () => {
+    setSelectCategory(null);
+    setServices([]);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     try {
-      const response = await  clientAxios.post('/api/newShift', {
+      const response = await clientAxios.post("/api/newShift", {
         service,
         nombre,
         horario,
-        numero
-      })
-    }catch(error) {
-      console.log(error)
+        numero,
+      });
+    } catch (error) {
+      console.log(error);
     }
-    
   };
   return (
     <>
@@ -67,21 +90,19 @@ export default function Form({services}) {
           className="flex flex-col items-center gap-2"
           onSubmit={handleSubmit}
         >
-          {!service ? (
+          {!selectCategory ? (
             <label className="text-white" htmlFor="servicio">
               Selecciona el servicio
             </label>
           ) : (
             <>
               <label className="text-white" htmlFor="servicio">
-                Seleccionaste el servicio de :{" "}
-                <span className="font-bold">{service}</span>
+                Seleccionaste el servicio de :
+                <span className="font-bold">{selectCategory}</span>
               </label>
               <button
                 className="bg-white px-2 py-2 text-black"
-                onClick={() => {
-                  setService(null);
-                }}
+                onClick={handleReset}
               >
                 Cambiar servicio
               </button>
@@ -89,13 +110,12 @@ export default function Form({services}) {
           )}
 
           <div className="  md:grid md:grid-cols-3 md:gap-10  py-4">
-            {!service &&
-              services.map((e, i) => (
+            {!selectCategory &&
+              categories.map((e, i) => (
                 <div
                   key={i}
                   className="mb-2 md:mb-0 relative hover:scale-110 hover:cursor-pointer transition-all ease-in-out"
-                  onClick={() => handleServiceClick(e.name)}
-                  data-service={e.name}
+                  onClick={() => handleCategoryClick(e)}
                 >
                   <Image
                     className="brightness-50 w-[300px] h-[300px]"
@@ -110,7 +130,40 @@ export default function Form({services}) {
                 </div>
               ))}
           </div>
-          {service && (
+
+          {loading ? (
+            <ClipLoader />
+          ) : services && services.length >1 ? (
+            <div className="w-1/2 bg-white">
+              <ul>
+                {services.map((element) => (
+                  <div className="p-3" key={element._id}>
+                    <li className="flex justify-between items-center">
+                      <p
+                        className="hover:cursor-pointer w-1/2"
+                        onClick={() => handleToggleDescription(element._id)}
+                      >
+                        {element.name}
+                      </p>
+                      <span>Precio ${element.price}</span>
+                      <button className="bg-red-300 py-2 px-2">Reservar</button>
+                    </li>
+                    <div
+                      className={`mt-5 description ${
+                        expandedElement === element._id
+                          ? "opacity-100 max-h-full transition-all duration-300 ease-out"
+                          : "opacity-0 max-h-0 transition-all duration-300 ease-out"
+                      }`}
+                    >
+                      {element.description}
+                    </div>
+                  </div>
+                ))}
+              </ul>
+            </div>
+          ) : <p> no </p> }
+
+          {/* {selectCategory && (
             <div>
               <p className="text-center text-white">Selecciona una fecha</p>
               <Calendar
@@ -168,7 +221,7 @@ export default function Form({services}) {
                 )}
               </div>
 
-              {horario && service && nombre.length > 3 && numero.length > 9 && (
+              {horario && selectCategory && nombre.length > 3 && numero.length > 9 && (
                 <div className="flex justify-center">
                   <button type="submit" className=" bg-red-800 p-3 text-white">
                     Reserva tu turno
@@ -176,12 +229,9 @@ export default function Form({services}) {
                 </div>
               )}
             </div>
-          )}
+          )} */}
         </form>
       </div>
     </>
   );
-};
-
-
-
+}
