@@ -5,11 +5,10 @@ import Service from "./models/Service"
 
 
 export default async function handler(req, res) {
+    connectDB()
 
-        console.log(req.body)
         if(req.method === 'POST') {
             try {
-             connectDB()
 
                 const services = await Service.find({category : req.body.categoryID})
                 res.status(200).json(services)
