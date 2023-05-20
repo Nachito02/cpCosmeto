@@ -1,12 +1,12 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import Shifts from "./models/Shifts"
+import Shift from "./models/Shifts"
 import connectDB from "./config/db"
 export default async function handler(req, res) {
   connectDB()
 
     try {
 
-      const getShift = await Shifts.find().populate('service')
+      const getShift = await Shift.find().populate('service')
 
         res.status(200).json(getShift)
 

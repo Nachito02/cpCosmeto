@@ -1,5 +1,7 @@
 import React from 'react'
 import Calendar from 'react-calendar';
+import "react-calendar/dist/Calendar.css";
+
 const ShowCalendar = ({setOpen,nameService,setname, setphone,phone,handleClickDay, value, setValue, today,arrayHorarios, name, selectCategory,horario,setHorario}) => {
   return (
     <div>

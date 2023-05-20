@@ -19,6 +19,7 @@ export default async function handler(req, res) {
         date:value,
         phone: phone,
         service:idService,
+        status: 'pendiente'
       })
 
         console.log(newShift)

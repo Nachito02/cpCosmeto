@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import Head from "next/head";
-import "react-calendar/dist/Calendar.css";
 import clientAxios from "../../config/clientAxios";
 import ClipLoader from "react-spinners/ClipLoader";
 import Services from "../Services/Services";

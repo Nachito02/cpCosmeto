@@ -26,7 +26,8 @@ const shiftsSchema = new mongoose.Schema({
     status: {
         type:String,
         enum :['pendiente', 'confirmado','cancelado','completado' ],
-        dafault: 'pendiente'
+        dafault: 'pendiente',
+        required:true
     }
 })
 
