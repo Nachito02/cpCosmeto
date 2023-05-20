@@ -1,33 +1,47 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Head from "next/head";
 import "react-calendar/dist/Calendar.css";
-import Calendar from "react-calendar";
-import Image from "next/image";
 import clientAxios from "../../config/clientAxios";
 import ClipLoader from "react-spinners/ClipLoader";
-
+import Services from "../Services/Services";
+import Categories from "../Categories/Categories";
+import ShowCalendar from "../ShowCalendar/ShowCalendar";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContentText,
+  DialogContent,
+  DialogActions,
+  Button,
+} from "@mui/material";
 export default function Form({ categories }) {
   const [value, setValue] = useState(new Date());
   const [today] = useState(new Date());
-  const [expandedElement, setExpandedElement] = useState(null);
-
-  const handleToggleDescription = (elementId) => {
-    if (expandedElement === elementId) {
-      setExpandedElement(null);
-    } else {
-      setExpandedElement(elementId);
-    }
-  };
   const [loading, setLoading] = useState(false);
   const [selectCategory, setSelectCategory] = useState(null);
   const [date, setDate] = useState(null);
   const [horario, setHorario] = useState(null);
-  const [nombre, setNombre] = useState("");
-  const [numero, setnumero] = useState("");
+  const [name, setname] = useState("");
+  const [phone, setphone] = useState("");
   const [services, setServices] = useState([]);
-  useEffect(() => {
-    console.log(selectCategory);
-  }, [selectCategory]);
+  const [showInput, setShowInput] = useState(false);
+  const [nameService, setNameService] = useState(null);
+  const [price, setPrice] = useState(null);
+  const [idService,setIdService] = useState(null)
+  const [open, setOpen] = useState(false);
+
+
+
+  const handleReservation = (event) => {
+    setNameService(event.name);
+    setIdService(event._id)
+    setPrice(event.price);
+    setShowInput(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   const arrayHorarios = [
     "9:00",
@@ -51,11 +65,17 @@ export default function Form({ categories }) {
 
     if (element) {
       setLoading(true);
-      const response = await clientAxios.post("/api/getService", {
-        categoryID: element._id,
-      });
 
-      setServices(response.data);
+      try {
+        const response = await clientAxios.post("/api/getService", {
+          categoryID: element._id,
+        });
+        console.log(response);
+        setServices(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+
       setLoading(false);
     }
   }
@@ -63,18 +83,34 @@ export default function Form({ categories }) {
   const handleReset = () => {
     setSelectCategory(null);
     setServices([]);
+    setShowInput(false);
+    setname("");
+    setphone("");
+    setHorario("");
+    setPrice("");
+    setNameService("");
+    setValue(new Date());
+    setIdService(null)
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
+  const handleSubmit = async () => {
+    console.table({
+      nameService,
+      name,
+      horario,
+      phone,
+      price,
+    });
     try {
       const response = await clientAxios.post("/api/newShift", {
-        service,
-        nombre,
+        price,
+        idService,
+        name,
         horario,
-        numero,
+        phone,
+        value
       });
+      console.log(response);
     } catch (error) {
       console.log(error);
     }
@@ -88,7 +124,7 @@ export default function Form({ categories }) {
         <h1 className="text-center text-xl text-white">Reserva tu turno</h1>
         <form
           className="flex flex-col items-center gap-2"
-          onSubmit={handleSubmit}
+          onSubmit={(e) => (e.preventDefault())}
         >
           {!selectCategory ? (
             <label className="text-white" htmlFor="servicio">
@@ -98,7 +134,7 @@ export default function Form({ categories }) {
             <>
               <label className="text-white" htmlFor="servicio">
                 Seleccionaste el servicio de :
-                <span className="font-bold">{selectCategory}</span>
+                <span className="font-bold"> {selectCategory}</span>
               </label>
               <button
                 className="bg-white px-2 py-2 text-black"
@@ -110,126 +146,76 @@ export default function Form({ categories }) {
           )}
 
           <div className="  md:grid md:grid-cols-3 md:gap-10  py-4">
-            {!selectCategory &&
-              categories.map((e, i) => (
-                <div
-                  key={i}
-                  className="mb-2 md:mb-0 relative hover:scale-110 hover:cursor-pointer transition-all ease-in-out"
-                  onClick={() => handleCategoryClick(e)}
-                >
-                  <Image
-                    className="brightness-50 w-[300px] h-[300px]"
-                    src={e.img_service}
-                    width={300}
-                    height={300}
-                    alt="categoria cejas"
-                  />
-                  <p className="absolute top-1/2 text-black text-xl left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white px-4 py-2 ">
-                    {e.name}
-                  </p>
-                </div>
-              ))}
+            {!selectCategory && (
+              <Categories
+                categories={categories}
+                handleCategoryClick={handleCategoryClick}
+              />
+            )}
           </div>
 
           {loading ? (
             <ClipLoader />
-          ) : services && services.length >1 ? (
-            <div className="w-1/2 bg-white">
-              <ul>
-                {services.map((element) => (
-                  <div className="p-3" key={element._id}>
-                    <li className="flex justify-between items-center">
-                      <p
-                        className="hover:cursor-pointer w-1/2"
-                        onClick={() => handleToggleDescription(element._id)}
-                      >
-                        {element.name}
-                      </p>
-                      <span>Precio ${element.price}</span>
-                      <button className="bg-red-300 py-2 px-2">Reservar</button>
-                    </li>
-                    <div
-                      className={`mt-5 description ${
-                        expandedElement === element._id
-                          ? "opacity-100 max-h-full transition-all duration-300 ease-out"
-                          : "opacity-0 max-h-0 transition-all duration-300 ease-out"
-                      }`}
-                    >
-                      {element.description}
-                    </div>
-                  </div>
-                ))}
-              </ul>
-            </div>
-          ) : <p> no </p> }
-
-          {/* {selectCategory && (
-            <div>
-              <p className="text-center text-white">Selecciona una fecha</p>
-              <Calendar
-                className={"mb-3"}
-                calendarType="US"
-                locale="es"
-                allowPartialRange={false}
-                onClickDay={handleClickDay}
-                onChange={(e) => {
-                  setValue(e);
-                }}
-                value={value}
-                selectRange={false}
-                minDate={today}
+          ) : services.length > 1 && !showInput ? (
+            <div className="px-2 md:px-0 w-full flex justify-center">
+              <Services
+                handleReservation={handleReservation}
+                services={services}
               />
-
-              <div>
-                <p className="text-center text-white">Seleccione un horario</p>
-                <div className="text-white font-bold grid grid-cols-3  place-content-center">
-
-                  {arrayHorarios.map((horario,index) => {
-                      return <div key={index} className="flex gap-2 justify-center">
-                      <input
-                        type="radio"
-                        name="horario"
-                        value={horario}
-                        onClick={(e) => {
-                          setHorario(e.target.value);
-                        }}
-                      />
-                      <p>{horario}</p>
-                    </div>
-                  })}
-
-                </div>
-              </div>
-
-              <div className="flex flex-col gap-2 mt-2 mb-3">
-                {horario && (
-                  <input
-                    className="p-2  outline-none"
-                    placeholder="Ingrese su nombre"
-                    value={nombre}
-                    onChange={(e) => setNombre(e.target.value)}
-                  />
-                )}
-                {horario && (
-                  <input
-                  type="number"
-                    className="p-2 outline-none "
-                    placeholder="Ingrese su numero de contacto"
-                    value={numero}
-                    onChange={(e) => setnumero(e.target.value)}
-                  />
-                )}
-              </div>
-
-              {horario && selectCategory && nombre.length > 3 && numero.length > 9 && (
-                <div className="flex justify-center">
-                  <button type="submit" className=" bg-red-800 p-3 text-white">
-                    Reserva tu turno
-                  </button>
-                </div>
-              )}
             </div>
-          )} */}
+          ) : (
+            services.length == 0 &&
+            selectCategory && <p>No hay servicios actualmente</p>
+          )}
+
+          {showInput && (
+            <>
+              <ShowCalendar
+                handleClickDay={handleClickDay}
+                today={today}
+                value={value}
+                setValue={setValue}
+                arrayHorarios={arrayHorarios}
+                selectCategory={selectCategory}
+                name={name}
+                horario={horario}
+                setHorario={setHorario}
+                phone={phone}
+                setname={setname}
+                setphone={setphone}
+                nameService={nameService}
+                setOpen={setOpen}
+              />
+            </>
+          )}
+
+          <Dialog
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+          >
+            <DialogTitle id="alert-dialog-title">
+              {"¿Desea confirmar el turno?"}
+            </DialogTitle>
+            <DialogContent>
+              <DialogContentText id="alert-dialog-description">
+                <p>name : {name}</p>
+                <p>Categoria : {selectCategory}</p>
+
+                <p>Servicio : {nameService}</p>
+                <p>Fecha : {value.toLocaleDateString()}</p>
+                <p>Precio : ${price}</p>
+                <p>phone de telefono : {phone}</p>
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleClose}>Cancelar</Button>
+              <Button onClick={(e) => {handleClose(); handleSubmit(e)}} type="submit" autoFocus>
+                Confirmar
+              </Button>
+            </DialogActions>
+          </Dialog>
         </form>
       </div>
     </>

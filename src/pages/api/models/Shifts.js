@@ -1,17 +1,23 @@
 import mongoose from "mongoose";
 
 const shiftsSchema = new mongoose.Schema({
-    user: {
+    name: {
         type: String,
         required: true
     },
-
+    phone: {
+        type:Number,
+        required:true
+    },
     service: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Service',
         required:true 
     },
-
+    date: {
+        type: Date,
+        required: 'true'
+    },
     hour: {
         type: String,
         required: true,
@@ -20,7 +26,6 @@ const shiftsSchema = new mongoose.Schema({
     status: {
         type:String,
         enum :['pendiente', 'confirmado','cancelado','completado' ],
-        required: true,
         dafault: 'pendiente'
     }
 })
