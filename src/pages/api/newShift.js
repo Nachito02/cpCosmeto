@@ -4,15 +4,10 @@ import connectDB from "./config/db"
 export default async function handler(req, res) {
   connectDB()
 
-  console.log(req.body)
 
   const {idService,nameService, name,horario, phone,value} = req.body
 
-
     try {
-
-      
-
       const newShift = await Shifts.create({
         name: name,
         hour:horario,

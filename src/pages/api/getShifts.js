@@ -1,18 +1,13 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import Shift from "./models/Shifts"
-import connectDB from "./config/db"
+import Shifts from "./models/Shifts";
+import connectDB from "./config/db";
 export default async function handler(req, res) {
-  connectDB()
+  try {
+    await connectDB(); // Llama a la función connectDB para conectar con la base de datos
 
-    try {
-
-      const getShift = await Shift.find().populate('service')
-
-        res.status(200).json(getShift)
-
-    } catch (error) {
-        console.log(error)
-    }
-
-
+    const getShift = await Shifts.find().populate("service");
+    res.status(200).json(getShift);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error al obtener los turnos" });
+  }
 }
