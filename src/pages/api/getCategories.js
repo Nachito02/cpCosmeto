@@ -1,13 +1,12 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import Category from "./models/Category"
+import Categoria from "./models/Categoria"
 import connectDB from "./config/db"
 
 export default async function handler(req, res) {
-    connectDB()
 
         try {
 
-            const services = await Category.find()
+            const services = await Categoria.find()
             res.status(200).json(services)
         } catch (error) {
             console.log('error')

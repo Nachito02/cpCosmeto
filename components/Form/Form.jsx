@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import Head from "next/head";
 import clientAxios from "../../config/clientAxios";
 import ClipLoader from "react-spinners/ClipLoader";
-import Services from "../Services/Services";
-import Categories from "../Categories/Categories";
+import Services from "../Services";
+import Categories from "../Categories";
 import ShowCalendar from "../ShowCalendar/ShowCalendar";
 import {
   Dialog,
@@ -69,7 +69,7 @@ export default function Form({ categories }) {
         const response = await clientAxios.post("/api/getService", {
           categoryID: element._id,
         });
-        console.log(response);
+       // console.log(response);
         setServices(response.data);
       } catch (error) {
         console.log(error);
@@ -109,7 +109,7 @@ export default function Form({ categories }) {
         phone,
         value
       });
-      console.log(response);
+     // console.log(response);
     } catch (error) {
       console.log(error);
     }

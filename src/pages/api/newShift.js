@@ -1,8 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import Shifts from "./models/Shifts"
-import connectDB from "./config/db"
+import Shifts from "./models/Turno"
 export default async function handler(req, res) {
-  connectDB()
 
 
   const {idService,nameService, name,horario, phone,value} = req.body
@@ -17,7 +15,7 @@ export default async function handler(req, res) {
         status: 'pendiente'
       })
 
-        console.log(newShift)
+        //console.log(newShift)
     } catch (error) {
         console.log(error)
     }

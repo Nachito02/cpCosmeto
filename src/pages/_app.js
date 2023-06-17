@@ -1,7 +1,13 @@
 import '@/styles/globals.css'
-import connectDB from './api/config/db'
 import '../styles/globals.css'
+import connectDB from './api/config/db'
+import { SessionProvider } from 'next-auth/react'
+export default function App({ Component, pageProps, session }) 
 
-export default function App({ Component, pageProps }) {
-  return <Component {...pageProps} />
+{
+connectDB()
+
+  return <SessionProvider session={session}>
+     <Component {...pageProps} />
+  </SessionProvider>
 }

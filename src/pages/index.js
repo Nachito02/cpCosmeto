@@ -1,11 +1,19 @@
-import Form from '../../components/Form/Form'
-import Layout from '../../components/Layout/Layout'
+import Categories from '../../components/Categories';
+import Layout from '../../components/Layout'
 import clientAxios from '../../config/clientAxios'
-export default function Home(props) {
+import Head from 'next/head';
+
+export default function Home({categories}) {
   return (
+    <>
+    <Head>
+        <title>CP COSMETO - Reserva tu turno</title>
+      </Head>
     <Layout>
-      <Form categories={props.categories} /> 
+      
+     <Categories categories={categories}/>
          </Layout>
+         </>
   )
 }
 
