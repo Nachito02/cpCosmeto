@@ -1,13 +1,14 @@
-import Categories from '../../components/Categories';
-import Layout from '../../components/Layout'
+import Categories from '@/components/Categories';
+import Layout from '@/components/Layout';
+
 import clientAxios from '../../config/clientAxios'
 import Head from 'next/head';
 
 export default function Home({categories}) {
   return (
     <>
-    <Head>
-        <title>CP COSMETO - Reserva tu turno</title>
+      <Head>
+        <title>{`CP COSMETO `}</title>
       </Head>
     <Layout>
       
@@ -18,11 +19,20 @@ export default function Home({categories}) {
 }
 
 export async function getServerSideProps() {
-  const response = await clientAxios.get('/api/getCategories');
+
+    try {
+      const response = await clientAxios.get('/api/getCategories');
   return {
     props: {
       categories : response.data
     }
   }
+    } catch (error) {
+      return {
+        props: {
+          notFound: true
+        }
+      }   
+    }
 
 }

@@ -69,7 +69,6 @@ export default function Form({ categories }) {
         const response = await clientAxios.post("/api/getService", {
           categoryID: element._id,
         });
-       // console.log(response);
         setServices(response.data);
       } catch (error) {
         console.log(error);
@@ -109,16 +108,13 @@ export default function Form({ categories }) {
         phone,
         value
       });
-     // console.log(response);
     } catch (error) {
       console.log(error);
     }
   };
   return (
     <>
-      <Head>
-        <title>CP COSMETO - RESERVA TU TURNO</title>
-      </Head>
+    
       <div className="mt-2 py-3">
         <h1 className="text-center text-xl text-white">Reserva tu turno</h1>
         <form

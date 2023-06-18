@@ -6,7 +6,7 @@ import { signIn, signOut, useSession } from "next-auth/react";
 const Nav = () => {
   const { data: session } = useSession();
 
-  console.log(session);
+  console.log(session)
   return (
     <div className="bg-white">
       <div className="flex  justify-center items-center px-3">
@@ -25,13 +25,13 @@ const Nav = () => {
 
         {session ? (
           <div className="flex items-center gap-2">
-            <Image className="rounded-full" width={100} height={100} src={session.user.image} />
-            <p>{session.user.name}</p>
+            {/* <Image className="rounded-full" width={100} alt="profile" height={100} src={session.user.image} /> */}
+            {/* <p>{session.user.name}</p> */}
           <button onClick={signOut}>Cerrar session</button>
 
           </div>
         ) : (
-          <button onClick={signIn}>Iniciar Sesión</button>
+          <button onClick={() => signIn('google')}>Iniciar Sesión</button>
         )}
       </nav>
     </div>

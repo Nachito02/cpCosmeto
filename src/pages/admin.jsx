@@ -9,7 +9,6 @@ const Admin = ({ shifts }) => {
   const [turnos, setTurnos] = useState(shifts);
 
   const filter = (day) => {
-    console.log(day.toISOString());
 
     const filtered = shifts.filter(
       (e) => e.date.split("T")[0] == day.toISOString().split("T")[0]

@@ -1,5 +1,6 @@
 import React from "react";
-import Layout from "../../components/Layout";
+import Layout from '@/components/Layout';
+
 import Image from "next/image";
 import Head from "next/head";
 import clientAxios from "../../config/clientAxios";
@@ -8,7 +9,7 @@ const Servicios = ({ categories }) => {
   return (
     <>
       <Head>
-        <title>CP COSMETO - Servicios</title>
+        <title>{`CP COSMETO - Servicios`}</title>
       </Head>
     <Layout>
     
@@ -46,10 +47,19 @@ const Servicios = ({ categories }) => {
 export default Servicios;
 
 export async function getServerSideProps() {
-  const response = await clientAxios.get("/api/getCategories");
-  return {
-    props: {
-      categories: response.data,
-    },
-  };
+  
+  try {
+    const response = await clientAxios.get("/api/getCategories");
+    return {
+      props: {
+        categories: response.data,
+      },
+    };
+  } catch (error) {
+    return {
+      props: {
+        categories:[]
+      },
+    };
+  }
 }

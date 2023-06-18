@@ -17,6 +17,7 @@ const clienteSchema = new mongoose.Schema({
   correo: {
     type: String,
     require: true,
+    unique: true,
   },
   password: {
     type: String,
