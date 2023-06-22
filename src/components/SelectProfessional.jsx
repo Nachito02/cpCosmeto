@@ -50,7 +50,7 @@ const SelectProfessional = () => {
       {profesionals && (
         profesionals.map((profesional) => (
 
-            <div className="flex items-center gap-2">
+            <div key={profesional._id} className="flex items-center gap-2">
               <Image src={profesional.foto_perfil} width={100} height={100} alt={profesional.nombre} />
               <p>{`${profesional.nombre} ${profesional.apellido}`}</p>
             </div>
