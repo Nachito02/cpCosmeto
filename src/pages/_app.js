@@ -1,9 +1,12 @@
 import '@/styles/globals.css'
 import '../styles/globals.css'
+import TurnosState from '@/context/Turnos/turnosState'
 import { SessionProvider } from 'next-auth/react'
 export default function App({ Component, pageProps, session }) 
 {
   return <SessionProvider session={session}>
-     <Component {...pageProps} />
+    <TurnosState>
+    <Component {...pageProps} />
+    </TurnosState>
   </SessionProvider>
 }

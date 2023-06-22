@@ -18,8 +18,8 @@ const Services = ({ services }) => {
         confirmButtonText: 'Iniciar Session',
         confirmButtonColor: '#fca5a5'    }).then(result => {
           if(result.isConfirmed) {
-            signIn()
-          }
+            signIn('google')
+          } 
         })
   
     }
