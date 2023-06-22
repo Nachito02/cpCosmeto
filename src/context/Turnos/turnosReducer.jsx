@@ -14,6 +14,14 @@ export default (state, action) => {
                 }
             }
 
+        case 'CLEAR_SERVICE':
+            return {
+                ...state,turno: {
+                    ...state.turno, service: null
+                }
+            }
+
+
         default:
             return {
                 ...state

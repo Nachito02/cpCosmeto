@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Layout from "@/components/Layout";
 import Services from "@/components/Services";
 import clientAxios from "../../../config/clientAxios";
 import { useRouter } from "next/router";
-
+import { useContext } from "react";
+import turnosContext from "@/context/Turnos/turnosContext";
 import Head from "next/head";
 const Turno = ({ services }) => {
 
@@ -13,6 +14,15 @@ const Turno = ({ services }) => {
   // console.log(services)
   const router = useRouter();
   const { categoria } = router.query;
+
+  const TurnosContext = useContext(turnosContext)
+
+  const {clearService} = TurnosContext
+  useEffect(() => {
+    return() => {
+      clearService()
+    }
+  },[])
 
   return (
     <>

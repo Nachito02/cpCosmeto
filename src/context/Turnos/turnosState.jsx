@@ -40,11 +40,18 @@ const TurnosState = ({children}) => {
 
      }
 
+     const clearService = () => {
+        dispatch({
+            type: 'CLEAR_SERVICE'
+        })
+     }
+
     return(
         <turnosContext.Provider value={{
             turno: state.turno,
             loading: state.loading,
-            selectService
+            selectService,
+            clearService
         }}>
 
             {children}
