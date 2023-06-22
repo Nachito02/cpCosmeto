@@ -27,6 +27,7 @@ const Services = ({ services }) => {
           signIn("google");
         }
       });
+      return
     }
 
    
