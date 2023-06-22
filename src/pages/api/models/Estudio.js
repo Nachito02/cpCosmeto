@@ -4,9 +4,11 @@ const estudioSchema = new mongoose.Schema({
   id_turno: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Turno",
-    required: true,
   },
-
+  nombre: {
+    type:String,
+    required:true
+  },
   direccion: {
     type: String,
     required: true,

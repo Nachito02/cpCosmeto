@@ -7,7 +7,8 @@ const TurnosState = ({children}) => {
 
     const initialState = {
         turno: {
-            service: null
+            service: null,
+            professional: null
         },
         loading: true
     }
@@ -46,12 +47,21 @@ const TurnosState = ({children}) => {
         })
      }
 
+
+     const selectProfessional = (profesional) => {
+        dispatch({
+            type: 'SELECT_PROFESSIONAL',
+            payload: profesional
+        })
+     }
+
     return(
         <turnosContext.Provider value={{
             turno: state.turno,
             loading: state.loading,
             selectService,
-            clearService
+            clearService,
+            selectProfessional
         }}>
 
             {children}

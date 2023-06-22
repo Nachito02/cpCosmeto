@@ -17,10 +17,16 @@ export default (state, action) => {
         case 'CLEAR_SERVICE':
             return {
                 ...state,turno: {
-                    ...state.turno, service: null
+                    ...state.turno, service: null, professional:null
                 }
             }
 
+            case 'SELECT_PROFESSIONAL':
+                return {
+                    ...state,turno: {
+                        ...state.turno, professional: action.payload
+                    }
+                }
 
         default:
             return {
