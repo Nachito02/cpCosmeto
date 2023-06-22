@@ -24,7 +24,7 @@ const ShowCalendar = ({setOpen,nameService,setname, setphone,phone,handleClickDa
                 <p className="text-center text-white">Seleccione un horario</p>
                 <div className="text-white font-bold grid grid-cols-3  place-content-center">
 
-                  {arrayHorarios.map((horario,index) => {
+                  {/* {arrayHorarios.map((horario,index) => {
                       return <div key={index} className="flex gap-2 justify-center">
                       <input
                         type="radio"
@@ -36,7 +36,7 @@ const ShowCalendar = ({setOpen,nameService,setname, setphone,phone,handleClickDa
                       />
                       <p>{horario}</p>
                     </div>
-                  })}
+                  })} */}
 
                 </div>
               </div>

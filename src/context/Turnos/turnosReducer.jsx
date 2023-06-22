@@ -7,6 +7,13 @@ export default (state, action) => {
                 ...state, loading: action.payload
             }
 
+        case 'SELECT_SERVICE':
+            return {
+                ...state, turno: {
+                    ...state.turno, service: action.payload
+                }
+            }
+
         default:
             return {
                 ...state

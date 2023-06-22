@@ -6,7 +6,9 @@ import { useSession } from "next-auth/react";
 const TurnosState = ({children}) => { 
 
     const initialState = {
-        turno: null,
+        turno: {
+            service: null
+        },
         loading: true
     }
 
@@ -27,10 +29,22 @@ const TurnosState = ({children}) => {
         }
 
     },[status])
+
+
+    const selectService = (service) => { 
+
+        dispatch({
+            type: 'SELECT_SERVICE',
+            payload: service
+        })
+
+     }
+
     return(
         <turnosContext.Provider value={{
             turno: state.turno,
-            loading: state.loading
+            loading: state.loading,
+            selectService
         }}>
 
             {children}

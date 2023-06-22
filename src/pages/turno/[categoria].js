@@ -6,6 +6,10 @@ import { useRouter } from "next/router";
 
 import Head from "next/head";
 const Turno = ({ services }) => {
+
+  
+
+
   // console.log(services)
   const router = useRouter();
   const { categoria } = router.query;

@@ -2,13 +2,27 @@ import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 import { useState } from "react";
 import Swal from "sweetalert2";
+import { useContext } from "react";
+import turnosContext from "@/context/Turnos/turnosContext";
+
+
+
 import { signIn, useSession } from "next-auth/react";
+import Calendar from "react-calendar";
+import ShowCalendar from "./ShowCalendar/ShowCalendar";
 const Services = ({ services }) => {
+  const TurnosContext = useContext(turnosContext)
+
+  const {selectService, turno} = TurnosContext
+
+
+  const [selectedService, setSelectedService] = useState(null)
+ 
   const router = useRouter();
   const { categoria } = router.query;
   const { data: session } = useSession();
 
-  const handleReservation = () => {
+  const handleReservation = (service) => {
     if (!session) {
       
       Swal.fire({
@@ -23,6 +37,9 @@ const Services = ({ services }) => {
         })
   
     }
+
+    console.log(service)
+
   };
   if (services.length === 0) {
     return (
@@ -54,7 +71,7 @@ const Services = ({ services }) => {
                 <button
                   type="button"
                   className="bg-red-300 py-2 px-2 my-2"
-                  onClick={handleReservation}
+                  onClick={() => { handleReservation(element.nombre) }}
                 >
                   Reservar
                 </button>
@@ -66,6 +83,13 @@ const Services = ({ services }) => {
           ))}
         </ul>
       </div>
+
+
+            {turno.service && (
+            
+              <ShowCalendar />
+            ) }
+
     </div>
   );
 };
