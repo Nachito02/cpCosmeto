@@ -13,6 +13,10 @@ const estudioSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+
+  foto: {
+    type: String
+  }
 });
 
 export default mongoose.models.Estudio ||

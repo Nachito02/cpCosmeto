@@ -17,10 +17,11 @@ const Turno = ({ services }) => {
 
   const TurnosContext = useContext(turnosContext)
 
-  const {clearService} = TurnosContext
+  const {clearService, clearTurno, turno} = TurnosContext
   useEffect(() => {
+    
     return() => {
-      clearService()
+      clearTurno()
     }
   },[])
 

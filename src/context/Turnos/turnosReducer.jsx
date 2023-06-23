@@ -21,12 +21,27 @@ export default (state, action) => {
                 }
             }
 
+        case 'CLEAR_TURNO':
+                return {
+                    ...state,turno: {
+                        ...state, service:null, professional:null, estudio:null
+                    }
+                }
+
             case 'SELECT_PROFESSIONAL':
                 return {
                     ...state,turno: {
                         ...state.turno, professional: action.payload
                     }
                 }
+
+            case 'SELECT_ESTUDIO': 
+            return {
+                ...state, turno : {
+                    ...state.turno, estudio: action.payload
+                }
+            }
+
 
         default:
             return {

@@ -4,7 +4,7 @@ import clientAxios from "../../config/clientAxios";
 import ClipLoader from "react-spinners/ClipLoader";
 import Services from "../Services";
 import Categories from "../Categories";
-import ShowCalendar from "../ShowCalendar/ShowCalendar";
+import ShowCalendar from "../ShowCalendar";
 import {
   Dialog,
   DialogTitle,
@@ -14,8 +14,6 @@ import {
   Button,
 } from "@mui/material";
 export default function Form({ categories }) {
-  const [value, setValue] = useState(new Date());
-  const [today] = useState(new Date());
   const [loading, setLoading] = useState(false);
   const [selectCategory, setSelectCategory] = useState(null);
   const [date, setDate] = useState(null);
