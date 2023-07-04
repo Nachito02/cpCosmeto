@@ -64,6 +64,17 @@ const TurnosState = ({ children }) => {
     });
   };
 
+  const clearProfessional = () => {
+    dispatch({
+      type: "CLEAR_PROFESSIONAL",
+    });
+  };
+
+  const clearEstudio = () => {
+    dispatch({
+      type: "CLEAR_ESTUDIO",
+    });
+  };
   return (
     <turnosContext.Provider
       value={{
@@ -73,7 +84,7 @@ const TurnosState = ({ children }) => {
         clearService,
         selectProfessional,
         selectEstudio,
-        clearTurno
+        clearTurno,clearProfessional,clearEstudio
       }}
     >
       {children}

@@ -5,10 +5,11 @@ import { useContext } from "react";
 import turnosContext from "@/context/Turnos/turnosContext";
 import { signIn, useSession } from "next-auth/react";
 import SelectProfessional from "./SelectProfessional";
+import { useVolverButton } from "@/hooks/useVolverButton";
 const Services = ({ services }) => {
   const TurnosContext = useContext(turnosContext);
 
-  const { selectService, turno } = TurnosContext;
+  const { selectService, turno, clearService, clearProfessional,clearEstudio } = TurnosContext;
 
   const router = useRouter();
   const { categoria } = router.query;
@@ -47,6 +48,11 @@ const Services = ({ services }) => {
       <h1 className="text-center my-6 text-white">
         Selecciona el servicio para {categoria}
       </h1>
+
+ 
+        <div className="flex justify-center">
+        {useVolverButton(turno, router, clearService, clearProfessional, clearEstudio)}
+        </div>
 
       {!turno.service && (
         <div className="my-5 w-full px-1 md:w-1/2 md:mx-auto bg-white">

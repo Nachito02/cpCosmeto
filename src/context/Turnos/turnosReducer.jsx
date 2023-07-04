@@ -42,6 +42,19 @@ export default (state, action) => {
                 }
             }
 
+            case 'CLEAR_PROFESSIONAL':
+                return {
+                    ...state,turno: {
+                        ...state.turno, professional: null
+                    }
+                }
+
+            case 'CLEAR_ESTUDIO': 
+            return {
+                ...state, turno : {
+                    ...state.turno, estudio: null
+                }
+            }
 
         default:
             return {
