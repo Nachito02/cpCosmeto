@@ -26,7 +26,7 @@ const SelectProfessional = () => {
         });
   
         setProfessionals(response.data)
-        console.log(response);
+        //console.log(response);
       } catch (error) {
         console.error(error);
       }finally{
@@ -40,7 +40,6 @@ const SelectProfessional = () => {
     
   }, []);
 
-  console.log(turno.professional)
 
   return (
     <div className="bg-white flex flex-col items-center gap-2 p-2">

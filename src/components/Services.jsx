@@ -32,7 +32,7 @@ const Services = ({ services }) => {
 
    
     selectService(service);
-    console.log(turno)
+   // console.log(turno)
   };
   if (services.length === 0) {
     return (
@@ -42,11 +42,22 @@ const Services = ({ services }) => {
     );
   }
 
+  const handleBack = () => { 
+
+    if(!turno.service) return router.push('/')
+    if(turno.service) return router.push('/')
+
+   }
+
   return (
     <div className="min-h-screen">
       <h1 className="text-center my-6 text-white">
         Selecciona el servicio para {categoria}
       </h1>
+
+      <div className="flex justify-center my-2">
+        <button className="bg-white px-4 py-2" onClick={(turno) => { handleBack(turno) }}>Volver</button>
+      </div>
 
       {!turno.service && (
         <div className="my-5 w-full px-1 md:w-1/2 md:mx-auto bg-white">
