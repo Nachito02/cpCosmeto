@@ -2,13 +2,8 @@ import mongoose from "mongoose";
 
 const horariosSchema = new mongoose.Schema({
   horario: {
-    type : Date
+    type : String
   },
-  fecha: {
-    type: Date,
-  },
-
-
 });
 
 export default mongoose.models.Horario ||

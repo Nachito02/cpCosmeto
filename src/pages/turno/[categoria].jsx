@@ -31,6 +31,7 @@ const Turno = ({ services }) => {
         <title>{`CP COSMETO - ${categoria}`}</title>
       </Head>
       <Layout>
+        
         <Services services={services} />
       </Layout>
     </>
