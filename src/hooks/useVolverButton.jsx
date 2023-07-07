@@ -1,4 +1,6 @@
-export function useVolverButton(turno, router, clearService, clearProfessional, clearEstudio) {
+import React from "react";
+
+export function VolverButton({ turno, router, clearService, clearProfessional, clearEstudio }) {
   let handleClick;
 
   if (!turno.service) {

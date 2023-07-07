@@ -5,7 +5,7 @@ import { useContext } from "react";
 import turnosContext from "@/context/Turnos/turnosContext";
 import { signIn, useSession } from "next-auth/react";
 import SelectProfessional from "./SelectProfessional";
-import { useVolverButton } from "@/hooks/useVolverButton";
+import { VolverButton, useVolverButton } from "@/hooks/useVolverButton";
 const Services = ({ services }) => {
   const TurnosContext = useContext(turnosContext);
 
@@ -58,7 +58,7 @@ const Services = ({ services }) => {
 
  
         <div className="flex justify-center">
-        {useVolverButton(turno, router, clearService, clearProfessional, clearEstudio)}
+        <VolverButton turno={turno} router={router} clearService={clearService} clearProfessional={clearProfessional} clearEstudio={clearEstudio} />
         </div>
 
       {!turno.service && (
