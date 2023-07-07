@@ -4,7 +4,7 @@ import clientAxios from "../../config/clientAxios";
 import ClipLoader from "react-spinners/ClipLoader";
 import Services from "../Services";
 import Categories from "../Categories";
-import ShowCalendar from "../ShowCalendar";
+import ShowCalendar from "../ShowCalendar/ShowCalendar";
 import {
   Dialog,
   DialogTitle,

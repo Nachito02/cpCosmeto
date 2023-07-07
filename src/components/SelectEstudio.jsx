@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import clientAxios from "../../config/clientAxios";
 import Image from "next/image";
 import turnosContext from "@/context/Turnos/turnosContext";
-import ShowCalendar from "./ShowCalendar";
+import ShowCalendar from "./ShowCalendar/ShowCalendar";
 import { ClipLoader } from "react-spinners";
 const SelectEstudio = () => {
   const [estudios, setEstudios] = useState();
