@@ -1,27 +1,30 @@
-import { isAvailableHour } from "./controller/turnoController"
+import {
+  handleReservation,
+  isAvailableHour,
+} from "./controller/turnoController";
 
-export default async function handler(req,res) {
+export default async function handler(req, res) {
+  if (req.method !== "GET" && req.method !== "POST") {
+    return res.status(405).end();
+  }
 
-    if(req.method !=='GET' && req.method !== 'POST') {
-        console.log('entrando')
+  //consultar disponibilidad
+  if (req.method === "GET") {
 
-        return res.status(405).end()
+    const horarios = await isAvailableHour(req.query);
+
+    res.json(horarios);
+  }
+
+  //crear el turno
+  if (req.method === "POST") {
+    try {
+      const response = await handleReservation(req);
+      console.log(response);
+
+      res.status(200).json(response);
+    } catch (error) {
+        console.log(error)
     }
-
-
-    //consultar disponibilidad 
-    if(req.method === 'GET') {
-
-        const horarios = await isAvailableHour()
-
-        res.json(horarios)
-
-    }
-
-    //crear el turno
-    if(req.method === 'POST') {
-
-
-
-    }
+  }
 }

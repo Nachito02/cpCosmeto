@@ -13,7 +13,7 @@ const turnosSchema = new mongoose.Schema({
   },
   fecha: {
     type: Date,
-    ref: "Service",
+    
     required: true,
   },
   horario: {
