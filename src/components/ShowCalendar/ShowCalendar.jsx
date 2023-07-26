@@ -17,7 +17,6 @@ const ShowCalendar = () => {
   const handleClickDay = async (e) => {
     try {
       const response = await clientAxios.get("/api/turno");
-
       setHorarios(response.data);
     } catch (error) {
       console.log(error);
@@ -49,12 +48,10 @@ const ShowCalendar = () => {
         tileDisabled={tileDisabled}
       />
 
-      {console.log(horarios)}
-
       <div className="grid grid-cols-3 justify-center">
         {horarios &&
           horarios.map((hora) => (
-            <div className="flex gap-2">
+            <div key={hora._id} className="flex gap-2">
               <input type="radio" />
               <p>{hora.horario}</p>
             </div>
