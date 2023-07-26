@@ -48,3 +48,12 @@ export const handleReservation = async (req) => {
 
   return "Agregado correctamente";
 };
+
+export const getTurnos = async () => {
+  const turnos = await Turno.find()
+    .populate("id_servicio", "nombre")
+    .populate("id_cliente", "nombre correo apellido")
+    .populate("horario", "horario");
+
+  return turnos;
+};

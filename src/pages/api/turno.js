@@ -10,7 +10,6 @@ export default async function handler(req, res) {
 
   //consultar disponibilidad
   if (req.method === "GET") {
-
     const horarios = await isAvailableHour(req.query);
 
     res.json(horarios);
@@ -24,7 +23,7 @@ export default async function handler(req, res) {
 
       res.status(200).json(response);
     } catch (error) {
-        console.log(error)
+      console.log(error);
     }
   }
 }

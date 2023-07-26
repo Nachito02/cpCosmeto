@@ -3,13 +3,13 @@ import clientAxios from "../../config/clientAxios";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import { Button } from "@mui/material";
+import { format } from "date-fns";
 const Admin = ({ shifts }) => {
   const [value, setValue] = useState(new Date());
 
   const [turnos, setTurnos] = useState(shifts);
 
   const filter = (day) => {
-
     const filtered = shifts.filter(
       (e) => e.date.split("T")[0] == day.toISOString().split("T")[0]
     );
@@ -18,15 +18,12 @@ const Admin = ({ shifts }) => {
       setTurnos(filtered);
     }
   };
-
   const reset = async () => {
     try {
       const response = await clientAxios.get("/api/getShifts");
-      setTurnos(response.data)
-    }catch(error) {
-
-    }
-  }
+      setTurnos(response.data);
+    } catch (error) {}
+  };
 
   return (
     <div className="bg-pink-300 min-h-screen ">
@@ -45,21 +42,25 @@ const Admin = ({ shifts }) => {
           onClickDay={(e) => filter(e)}
         />
 
-          <Button className="w-21 h-21" variant="contained" onClick={reset}> Mostrar todos los turnos</Button>
+        <Button className="w-21 h-21" variant="contained" onClick={reset}>
+          {" "}
+          Mostrar todos los turnos
+        </Button>
       </div>
       <h1 className="text-center">Todos los turnos</h1>
 
-          {/* <Table /> */}
+      {/* <Table /> */}
       <div className="flex gap-2">
         {turnos.length ? (
-          turnos.map((e) => (
-            <div className="bg-white p-3" key={e._id}>
-              <p>Nombre:{e.name}</p>
-              <p>Estado:{e.phone}</p>
-              <p>Fecha:{e.date.split("T")[0]}</p>
-              <p>Horario:{e.hour}</p>
-              <p>Estado:{e.status}</p>
-              <p>Servicio:{e.service.name}</p>
+          turnos.map((turno) => (
+            <div className="bg-white p-3" key={turno._id}>
+              <p>
+                Cliente:{turno.id_cliente.nombre} {turno.id_cliente.apellido}
+              </p>
+              <p>Fecha:{format(new Date(turno.fecha), "dd/MM/yyyy")}</p>
+              <p>Horario:{turno.horario.horario}</p>
+              <p>Estado:{turno.estado}</p>
+              <p>Servicio:{turno.id_servicio.nombre}</p>
             </div>
           ))
         ) : (
@@ -73,10 +74,10 @@ const Admin = ({ shifts }) => {
 export default Admin;
 
 export async function getServerSideProps() {
-  const response = await clientAxios.get("/api/getShifts");
+  const shifts = await clientAxios.get("/api/getTurnos");
   return {
     props: {
-      shifts: response.data,
+      shifts: shifts.data,
     },
   };
 }
