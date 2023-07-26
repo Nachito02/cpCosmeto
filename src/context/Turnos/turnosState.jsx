@@ -9,6 +9,7 @@ const TurnosState = ({ children }) => {
       service: null,
       professional: null,
       estudio: null,
+      horario: null
     },
     loading: true,
   };

@@ -1,13 +1,16 @@
-import Horarios from "../models/Horarios"
-import Turno from "../models/Turno"
+import Horarios from "../models/Horarios";
+import Turno from "../models/Turno";
 
-export const isAvailableHour = async (turno) => { 
+export const isAvailableHour = async (date) => {
+  const horarios = await Horarios.find();
 
+  const horariosReservados = await Turno.find({ fecha: date }).distinct(
+    "horario"
+  );
 
-    const horarios = await Horarios.find()
+  const availableHours = horarios.filter(
+    (horario) => !horariosReservados.includes(horario._id.toString())
+  );
 
-
-    return horarios
-
-
- }
+  return availableHours;
+};

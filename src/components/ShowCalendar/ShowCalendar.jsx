@@ -5,6 +5,7 @@ import "react-calendar/dist/Calendar.css";
 
 import turnosContext from "@/context/Turnos/turnosContext";
 import clientAxios from "../../../config/clientAxios";
+import { ClipLoader } from "react-spinners";
 const ShowCalendar = () => {
   const [value, setValue] = useState("");
   const [today] = useState(new Date());
@@ -12,14 +13,18 @@ const ShowCalendar = () => {
   const [horarios, setHorarios] = useState([]);
   const TurnosContext = useContext(turnosContext);
 
+  const [loading, setLoading] = useState(false);
   const { turno } = TurnosContext;
 
   const handleClickDay = async (e) => {
     try {
+      setLoading(true);
       const response = await clientAxios.get("/api/turno");
       setHorarios(response.data);
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
     setValue(e);
   };
@@ -49,13 +54,17 @@ const ShowCalendar = () => {
       />
 
       <div className="grid grid-cols-3 justify-center">
-        {horarios &&
+        {loading ? (
+          <ClipLoader />
+        ) : (
+          horarios &&
           horarios.map((hora) => (
             <div key={hora._id} className="flex gap-2">
               <input type="radio" />
               <p>{hora.horario}</p>
             </div>
-          ))}
+          ))
+        )}
       </div>
     </div>
   );
