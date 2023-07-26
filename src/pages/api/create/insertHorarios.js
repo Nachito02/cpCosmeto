@@ -23,7 +23,7 @@ export default async function handler(req, res) {
     for (const horario of horarios) {
       const existHorario = await Horarios.findOne({ horario: horario.horario });
       if (!existHorario) {
-        await Category.create(horario);
+        await Horarios.create(horario);
       }
     }
     
