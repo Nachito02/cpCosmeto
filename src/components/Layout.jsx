@@ -5,7 +5,7 @@ import { Ubuntu } from 'next/font/google'
 const inter = Ubuntu({subsets: ['latin'], weight:'400'})
 const Layout = ({children}) => {
   return (
-    <div className={`min-h-screen bg-pink-500 ${inter.className} `}>
+    <div className={`min-h-screen bg-[#FBA1B7] ${inter.className} `}>
         
         <Nav />
         {children}

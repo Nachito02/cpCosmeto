@@ -114,7 +114,7 @@ export default function Form({ categories }) {
     <>
     
       <div className="mt-2 py-3">
-        <h1 className="text-center text-xl text-white">Reserva tu turno</h1>
+        <h1 className="text-center text-xl text-black font-bold">Reserva tu turno</h1>
         <form
           className="flex flex-col items-center gap-2"
           onSubmit={(e) => (e.preventDefault())}

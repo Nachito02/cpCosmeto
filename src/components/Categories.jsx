@@ -5,8 +5,10 @@ const Categories = ({ categories, handleCategoryClick }) => {
   const router = useRouter();
   return (
     <>
-      <h1 className="text-center text-white text-xl mt-2">Reserva tu turno</h1>
-      <div className="grid  md:grid-cols-2 lg:grid-cols-3 place-items-center max-w-[120rem] mx-auto gap-5 my-5">
+      <h1 className="text-center text-white font-bold text-2xl mt-2">
+        Reserva tu turno
+      </h1>
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 place-items-center max-w-[120rem] mx-auto gap-3 my-5">
         {categories.map((category, i) => (
           <div
             key={i}
