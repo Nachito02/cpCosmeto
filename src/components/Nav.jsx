@@ -30,7 +30,7 @@ const Nav = () => {
 
   return (
     <div
-      className="bg-[#FFD1DA] flex justify-between lg:items-center lg:justify-between md:px-36 "
+      className="bg-white flex justify-between lg:items-center lg:justify-between md:px-36 "
       onMouseLeave={handleHoverExit}
     >
       <div className="w-full lg:w-auto">

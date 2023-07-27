@@ -1,11 +1,13 @@
 import React from 'react'
 import Nav from './Nav'
 import Footer from './Footer'
-import { Ubuntu } from 'next/font/google'
-const inter = Ubuntu({subsets: ['latin'], weight:'400'})
+import { PT_Sans } from 'next/font/google'
+const inter = PT_Sans({subsets: ['latin'], weight:'400'})
+
+
 const Layout = ({children}) => {
   return (
-    <div className={`min-h-screen bg-[#FBA1B7] ${inter.className} `}>
+    <div className={`min-h-screen bg-[#F31559] ${inter.className} `}>
         
         <Nav />
         {children}

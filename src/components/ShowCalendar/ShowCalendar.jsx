@@ -6,20 +6,37 @@ import { useSession } from "next-auth/react";
 import turnosContext from "@/context/Turnos/turnosContext";
 import clientAxios from "../../../config/clientAxios";
 import { ClipLoader } from "react-spinners";
-const ShowCalendar = () => {
 
+import {
+  Dialog,
+  DialogTitle,
+  DialogContentText,
+  DialogContent,
+  DialogActions,
+  Button,
+} from "@mui/material";
+
+const ShowCalendar = () => {
   const { data: session } = useSession();
-  
+
+  console.log(session);
+
+  const [open, setOpen] = useState(false);
   const [value, setValue] = useState("");
   const [today] = useState(new Date());
 
   const [selectHorario, setSelectHorario] = useState(null);
+  const [inputHorario, setInputHorario] = useState(null);
 
   const [horarios, setHorarios] = useState([]);
   const TurnosContext = useContext(turnosContext);
 
   const [loading, setLoading] = useState(false);
   const { turno } = TurnosContext;
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   const handleClickDay = async (e) => {
     try {
@@ -50,17 +67,17 @@ const ShowCalendar = () => {
   };
 
   const handleReservation = async () => {
-
+  
     try {
-      console.log(session)
+      console.log(session);
       const response = await clientAxios.post("/api/turno", {
-        emailClient : session.user.email,
-        nameService : turno.service,
-        date : value,
-        hours : selectHorario,
-        studio : turno.estudio
+        emailClient: session.user.email,
+        nameService: turno.service,
+        date: value,
+        hours: selectHorario,
+        studio: turno.estudio,
       });
-      console.log(response)
+      console.log(response.data);
     } catch (error) {
       console.log(error);
     } finally {
@@ -90,7 +107,10 @@ const ShowCalendar = () => {
               <input
                 name="horario"
                 type="radio"
-                onClick={() => setSelectHorario(hora._id)}
+                onClick={() => {
+                  setSelectHorario(hora._id);
+                  setInputHorario(hora.horario);
+                }}
               />
               <p>{hora.horario}</p>
             </div>
@@ -101,13 +121,44 @@ const ShowCalendar = () => {
       {selectHorario && (
         <div className="flex justify-center my-2">
           <button
-            onClick={handleReservation}
+            onClick={ () => setOpen(true) }
             className="text-white bg-pink-500 py-2 px-7 my-2"
           >
             Confirmar turno
           </button>
         </div>
       )}
+
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {"¿Desea confirmar el turno?"}
+        </DialogTitle>
+        <DialogContent >
+          <DialogContentText id="alert-dialog-description">
+            <p>Nombre : {session.user.name}</p>
+            <p>Servicio : {turno.service}</p>
+            <p>Profesional : {turno.professional}</p>
+            <p>Horario : {inputHorario}</p>
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Cancelar</Button>
+          <Button
+            onClick={(e) => {
+              handleReservation()
+            }}
+            type="submit"
+            autoFocus
+          >
+            Confirmar
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };

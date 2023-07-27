@@ -42,6 +42,7 @@ const SelectProfessional = () => {
 
 
   return (
+    <div className="my-5 w-full px-1 md:w-1/2 md:mx-auto bg-white">
     <div className="bg-white flex flex-col items-center gap-2 p-2">
       <p>{`Selecciona el professional para el servicio de : ${turno?.service}`}</p>
 
@@ -60,6 +61,7 @@ const SelectProfessional = () => {
         ) : <SelectEstudio />  
       )}
       
+    </div>
     </div>
   );
 };

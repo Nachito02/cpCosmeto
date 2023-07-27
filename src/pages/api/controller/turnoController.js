@@ -46,7 +46,7 @@ export const handleReservation = async (req) => {
 
   console.log(newTurno);
 
-  return "Agregado correctamente";
+  return newTurno._id;
 };
 
 export const getTurnos = async () => {

@@ -68,15 +68,15 @@ const Services = ({ services }) => {
               <div className="p-3" key={element._id}>
                 <li className="flex justify-around items-center bg-sky-200 border border-black-500">
                   <p
-                    className="hover:cursor-pointer w-1/2"
-                    onClick={() => handleToggleDescription(element._id)}
+                    className="w-1/2"
+          
                   >
                     {element.nombre}
                   </p>
                   <span>Precio ${element.precio}</span>
                   <button
                     type="button"
-                    className="bg-red-300 py-2 px-2 my-2"
+                    className="bg-[#FF52A2] py-2 px-2 my-2 text-white"
                     onClick={() => {
                       handleReservation(element.nombre);
                     }}

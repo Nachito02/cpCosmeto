@@ -36,9 +36,7 @@ export default function Form({ categories }) {
     setShowInput(true);
   };
 
-  const handleClose = () => {
-    setOpen(false);
-  };
+
 
   const arrayHorarios = [
     "9:00",
