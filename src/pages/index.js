@@ -10,10 +10,10 @@ export default function Home({categories}) {
       <Head>
         <title>{`CP COSMETO `}</title>
       </Head>
-    <Layout>
+
       
      <Categories categories={categories}/>
-         </Layout>
+       
          </>
   )
 }

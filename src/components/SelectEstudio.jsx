@@ -8,9 +8,9 @@ const SelectEstudio = () => {
   const [estudios, setEstudios] = useState();
   const [isLoading, setIsLoading] = useState();
 
-  const TurnosContext = useContext(turnosContext)
+  const TurnosContext = useContext(turnosContext);
 
-  const {selectEstudio, turno} = TurnosContext
+  const { selectEstudio, turno } = TurnosContext;
   useEffect(() => {
     const getStudios = async () => {
       try {
@@ -28,23 +28,21 @@ const SelectEstudio = () => {
     getStudios();
   }, []);
 
-
   return (
     <div>
-      {!turno.estudio &&
-       <p className="text-center">Selecciona tu estudio</p>}
-     
+      {!turno.estudio && <p className="text-center">Selecciona tu estudio</p>}
+
       {isLoading && <ClipLoader />}
 
-        {!isLoading && !estudios && (
-          <p>No hay estudios disponibles</p>
-        )} 
+      {!isLoading && !estudios && <p>No hay estudios disponibles</p>}
 
       {estudios && !turno.estudio && (
         <div className="flex flex-col gap-5">
           {estudios.map((estudio) => (
             <div
-            onClick={() => { selectEstudio(estudio.nombre) }}
+              onClick={() => {
+                selectEstudio(estudio.nombre);
+              }}
               key={estudio._id}
               className="flex items-center gap-2 hover:cursor-pointer"
             >
@@ -64,9 +62,7 @@ const SelectEstudio = () => {
         </div>
       )}
 
-            {turno.estudio && turno.professional && turno.service && (
-              <ShowCalendar />
-            )}
+      {turno.estudio && turno.professional && turno.service && <ShowCalendar />}
     </div>
   );
 };

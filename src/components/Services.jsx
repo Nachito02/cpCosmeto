@@ -9,7 +9,13 @@ import { VolverButton, useVolverButton } from "@/hooks/useVolverButton";
 const Services = ({ services }) => {
   const TurnosContext = useContext(turnosContext);
 
-  const { selectService, turno, clearService, clearProfessional,clearEstudio } = TurnosContext;
+  const {
+    selectService,
+    turno,
+    clearService,
+    clearProfessional,
+    clearEstudio,
+  } = TurnosContext;
 
   const router = useRouter();
   const { categoria } = router.query;
@@ -28,12 +34,11 @@ const Services = ({ services }) => {
           signIn("google");
         }
       });
-      return
+      return;
     }
 
-   
     selectService(service);
-   // console.log(turno)
+    // console.log(turno)
   };
   if (services.length === 0) {
     return (
@@ -43,12 +48,10 @@ const Services = ({ services }) => {
     );
   }
 
-  const handleBack = () => { 
-
-    if(!turno.service) return router.push('/')
-    if(turno.service) return router.push('/')
-
-   }
+  const handleBack = () => {
+    if (!turno.service) return router.push("/");
+    if (turno.service) return router.push("/");
+  };
 
   return (
     <div className="min-h-screen">
@@ -56,10 +59,15 @@ const Services = ({ services }) => {
         Selecciona el servicio para {categoria}
       </h1>
 
- 
-        <div className="flex justify-center">
-        <VolverButton turno={turno} router={router} clearService={clearService} clearProfessional={clearProfessional} clearEstudio={clearEstudio} />
-        </div>
+      <div className="flex justify-center">
+        <VolverButton
+          turno={turno}
+          router={router}
+          clearService={clearService}
+          clearProfessional={clearProfessional}
+          clearEstudio={clearEstudio}
+        />
+      </div>
 
       {!turno.service && (
         <div className="my-5 w-full px-1 md:w-1/2 md:mx-auto bg-white">
@@ -67,12 +75,7 @@ const Services = ({ services }) => {
             {services.map((element) => (
               <div className="p-3" key={element._id}>
                 <li className="flex justify-around items-center bg-sky-200 border border-black-500">
-                  <p
-                    className="w-1/2"
-          
-                  >
-                    {element.nombre}
-                  </p>
+                  <p className="w-1/2">{element.nombre}</p>
                   <span>Precio ${element.precio}</span>
                   <button
                     type="button"

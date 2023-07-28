@@ -11,7 +11,7 @@ const Servicios = ({ categories }) => {
       <Head>
         <title>{`CP COSMETO - Servicios`}</title>
       </Head>
-      <Layout>
+    
         <div className="max-w-[800px] md:max-w-[800px] mx-auto text-white mt-4 md:p-0">
           <h1 className="text-center font-bold text-3xl mb-8">
             Conoce los servicios
@@ -54,7 +54,7 @@ const Servicios = ({ categories }) => {
             </>
           ))}
         </div>
-      </Layout>
+   
     </>
   );
 };

@@ -29,6 +29,9 @@ const clienteSchema = new mongoose.Schema({
   fecha_nacimiento: {
     type: Date,
   },
+  number: {
+    type: String,
+  },
 });
 
 export default mongoose.models.Cliente ||

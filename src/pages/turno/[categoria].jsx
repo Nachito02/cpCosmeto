@@ -8,8 +8,6 @@ import turnosContext from "@/context/Turnos/turnosContext";
 import Head from "next/head";
 const Turno = ({ services }) => {
 
-  
-
 
   // console.log(services)
   const router = useRouter();
@@ -30,10 +28,8 @@ const Turno = ({ services }) => {
       <Head>
         <title>{`CP COSMETO - ${categoria}`}</title>
       </Head>
-      <Layout>
         
         <Services services={services} />
-      </Layout>
     </>
   );
 };

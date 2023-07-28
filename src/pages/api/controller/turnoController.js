@@ -22,7 +22,7 @@ export const isAvailableHour = async (req) => {
 };
 
 export const handleReservation = async (req) => {
-  const { emailClient, nameService, date, hours, studio } = req.body;
+  const { emailClient, nameService, date, hours, studio, professional } = req.body;
 
   console.log(emailClient);
   const client = await Cliente.findOne({ correo: emailClient });
@@ -38,6 +38,7 @@ export const handleReservation = async (req) => {
   const newTurno = await Turno.create({
     id_cliente: client._id,
     id_servicio: service._id,
+    id_profesional : professional,
     fecha: date,
     horario: hours,
     estudio: studio,
@@ -54,6 +55,17 @@ export const getTurnos = async () => {
     .populate("id_servicio", "nombre")
     .populate("id_cliente", "nombre correo apellido")
     .populate("horario", "horario");
+
+  return turnos;
+};
+
+export const getTurno = async (id) => {
+  const turnos = await Turno.findById(id)
+    .populate("id_servicio", "nombre precio")
+    .populate("id_cliente", "nombre correo apellido")
+    .populate("horario", "horario")
+    .populate("id_profesional", "nombre");
+    ;
 
   return turnos;
 };

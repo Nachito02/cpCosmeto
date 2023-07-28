@@ -1,20 +1,21 @@
-import React from 'react'
-import Nav from './Nav'
-import Footer from './Footer'
-import { PT_Sans } from 'next/font/google'
-const inter = PT_Sans({subsets: ['latin'], weight:'400'})
+import React from "react";
+import Nav from "./Nav";
+import Footer from "./Footer";
+import { PT_Sans } from "next/font/google";
+const inter = PT_Sans({ subsets: ["latin"], weight: "400" });
 
-
-const Layout = ({children}) => {
+const Layout = ({ children }) => {
   return (
-    <div className={`min-h-screen bg-[#F31559] ${inter.className} `}>
-        
-        <Nav />
-        {children}
+    <div className={` bg-[#F31559] ${inter.className} `}>
+      <div className="min-h-screen">
+      <Nav />
+      {children}
 
-        <Footer />
+      </div>
+      <Footer />
+
     </div>
-  )
-}
+  );
+};
 
-export default Layout
+export default Layout;

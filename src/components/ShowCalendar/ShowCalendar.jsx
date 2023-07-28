@@ -6,7 +6,7 @@ import { useSession } from "next-auth/react";
 import turnosContext from "@/context/Turnos/turnosContext";
 import clientAxios from "../../../config/clientAxios";
 import { ClipLoader } from "react-spinners";
-
+import { useRouter } from "next/router";
 import {
   Dialog,
   DialogTitle,
@@ -19,12 +19,13 @@ import {
 const ShowCalendar = () => {
   const { data: session } = useSession();
 
-  console.log(session);
+  const router = useRouter();
 
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("");
   const [today] = useState(new Date());
-
+  const [number, setNumber] = useState("");
+  const [error, setError] = useState(false);
   const [selectHorario, setSelectHorario] = useState(null);
   const [inputHorario, setInputHorario] = useState(null);
 
@@ -38,7 +39,7 @@ const ShowCalendar = () => {
     setOpen(false);
   };
 
-  const handleClickDay = async (e) => {
+  const fetchHorarios = async () => {
     try {
       setLoading(true);
       const response = await clientAxios.get("/api/turno", {
@@ -47,11 +48,20 @@ const ShowCalendar = () => {
         },
       });
       setHorarios(response.data);
+      setLoading(false);
     } catch (error) {
       console.log(error);
-    } finally {
       setLoading(false);
     }
+  };
+
+  useEffect(() => {
+    if (value !== "") {
+      fetchHorarios();
+    }
+  }, [value]);
+
+  const handleClickDay = async (e) => {
     setValue(e);
   };
   const maxDate = addMonths(today, 4);
@@ -66,18 +76,31 @@ const ShowCalendar = () => {
     return false;
   };
 
+  const handleNumber = async (e) => {
+    setNumber(e);
+    if (number.length < 6) {
+      setError("Por favor ingrese un numero valido");
+    } else {
+      setError(false);
+    }
+  };
+
   const handleReservation = async () => {
-  
+    if (number === "") setError("Por favor ingrese un numero válido");
+
+    if (error) return;
+
     try {
-      console.log(session);
       const response = await clientAxios.post("/api/turno", {
         emailClient: session.user.email,
         nameService: turno.service,
         date: value,
         hours: selectHorario,
         studio: turno.estudio,
+        professional : turno.professional.id
       });
-      console.log(response.data);
+
+      router.push(`/confirm/${response.data}`);
     } catch (error) {
       console.log(error);
     } finally {
@@ -86,6 +109,7 @@ const ShowCalendar = () => {
 
   return (
     <div className="my-calendar">
+      <p className="text-center my-3">Seleccione fecha y horario</p>
       <Calendar
         maxDate={maxDate}
         className={"mb-3 "}
@@ -97,31 +121,47 @@ const ShowCalendar = () => {
         tileDisabled={tileDisabled}
       />
 
-      <div className="grid grid-cols-3 justify-center">
+      <div className="flex justify-center flex-col items-center ">
+        <p className="my-2">Horarios disponibles</p>
         {loading ? (
           <ClipLoader />
         ) : (
-          horarios &&
-          horarios.map((hora) => (
-            <div key={hora._id} className="flex gap-2">
-              <input
-                name="horario"
-                type="radio"
-                onClick={() => {
-                  setSelectHorario(hora._id);
-                  setInputHorario(hora.horario);
-                }}
-              />
-              <p>{hora.horario}</p>
+          horarios.length && (
+            <div className="grid grid-cols-3  justify-center">
+              {horarios.map((hora) => (
+                <div key={hora._id} className="flex mr-5">
+                  <input
+                    id={hora._id}
+                    name="horario"
+                    type="radio"
+                    onClick={() => {
+                      setSelectHorario(hora._id);
+                      setInputHorario(hora.horario);
+                    }}
+                  />
+                  <label htmlFor={hora._id}>{hora.horario}</label>
+                </div>
+              ))}
             </div>
-          ))
+          )
         )}
       </div>
 
       {selectHorario && (
-        <div className="flex justify-center my-2">
+        <div className="flex justify-center flex-col my-4">
+          <div className="flex gap-2 justify-center flex-col">
+            <label htmlFor="numero">Numero de contacto</label>
+            <input
+              value={number}
+              type="text"
+              onChange={(e) => handleNumber(e.target.value)}
+              className="border-sky-600 border-2"
+            />
+            {error && <p>{error}</p>}
+          </div>
+
           <button
-            onClick={ () => setOpen(true) }
+            onClick={() => setOpen(true)}
             className="text-white bg-pink-500 py-2 px-7 my-2"
           >
             Confirmar turno
@@ -138,19 +178,20 @@ const ShowCalendar = () => {
         <DialogTitle id="alert-dialog-title">
           {"¿Desea confirmar el turno?"}
         </DialogTitle>
-        <DialogContent >
+        <DialogContent>
           <DialogContentText id="alert-dialog-description">
             <p>Nombre : {session.user.name}</p>
             <p>Servicio : {turno.service}</p>
-            <p>Profesional : {turno.professional}</p>
+            <p>Profesional : {turno.professional.nombre}</p>
             <p>Horario : {inputHorario}</p>
+            <p>Estudio : {turno.estudio}</p>
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancelar</Button>
           <Button
             onClick={(e) => {
-              handleReservation()
+              handleReservation();
             }}
             type="submit"
             autoFocus

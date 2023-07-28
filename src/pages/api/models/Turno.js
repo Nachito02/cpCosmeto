@@ -11,9 +11,16 @@ const turnosSchema = new mongoose.Schema({
     ref: "Servicio",
     required: true,
   },
+
+  id_profesional: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Profesional",
+    required: true,
+  },
+
   fecha: {
     type: Date,
-    
+
     required: true,
   },
   horario: {
