@@ -5,7 +5,7 @@ import format from "date-fns/format";
 import dynamic from "next/dynamic";
 import { ClipLoader } from "react-spinners";
 
-const ConfirmTurno = ({ turno }) => {
+const ConfirmTurno = ({ turno, paymentId }) => {
   const initMercadoPago = () =>
     import("@mercadopago/sdk-react").then((mod) =>
       mod.initMercadoPago(process.env.NEXT_PUBLIC_MP_PUBLIC_KEY, {
@@ -24,10 +24,30 @@ const ConfirmTurno = ({ turno }) => {
     }
   );
 
+  const StatusScreen = dynamic(
+    () => import("@mercadopago/sdk-react").then((mod) => mod.StatusScreen),
+    {
+      ssr: false, // Establece ssr en false para evitar problemas con el renderizado del lado del servidor
+    }
+  );
+
+  const Wallet = dynamic(
+    () => import("@mercadopago/sdk-react").then((mod) => mod.Wallet),
+    {
+      ssr: false, // Establece ssr en false para evitar problemas con el renderizado del lado del servidor
+    }
+  );
+
   const getPreference = async () => {
     try {
       setLoading(true);
-      const response = await clientAxios.get("/api/mercadopago");
+      const response = await clientAxios.get("/api/mercadopago", {
+        params: {
+          id: turno._id,
+          precio: turno.id_servicio.precio / 2,
+          nombre: turno.id_servicio.nombre,
+        },
+      });
 
       setPreferenceId(response.data);
     } catch (error) {
@@ -40,56 +60,12 @@ const ConfirmTurno = ({ turno }) => {
   useEffect(() => {
     initMercadoPago();
     getPreference();
-  }, []);
 
-  const initialization = {
-    amount: 100,
-    preferenceId: preferenceId,
-  };
-  const customization = {
-    paymentMethods: {
-      ticket: "all",
-      creditCard: "all",
-      debitCard: "all",
-      mercadoPago: "all",
-    },
-  };
-  const onSubmit = async ({ selectedPaymentMethod, formData }) => {
-    // callback llamado al hacer clic en el botón enviar datos
-    console.log(formData);
-    return new Promise((resolve, reject) => {
-      fetch("/process_payment", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      })
-        .then((response) => response.json())
-        .then((response) => {
-          // recibir el resultado del pago
-          resolve();
-        })
-        .catch((error) => {
-          // manejar la respuesta de error al intentar crear el pago
-          reject();
-        });
-    });
-  };
-  const onError = async (error) => {
-    // callback llamado para todos los casos de error de Brick
-    console.log(error);
-  };
-  const onReady = async () => {
-    /*
-      Callback llamado cuando el Brick está listo.
-      Aquí puede ocultar cargamentos de su sitio, por ejemplo.
-    */
-  };
+    return;
+  }, []);
 
   const { data: session } = useSession();
 
-  console.log(session);
   return (
     <div className="">
       <p className="text-center text-white text-xl my-5">
@@ -98,16 +74,16 @@ const ConfirmTurno = ({ turno }) => {
       <p className="text-center text-white text-xl my-5">
         Tu turno esta {turno.estado}
       </p>
-
       <div className="bg-white">
         <div className="p-2 ">
           <p>Estudio: {turno.estudio}</p>
           <p>
-            Profesional: {turno.id_profesional.nombre}{" "}
+            Profesional: {turno.id_profesional.nombre}
             {turno.id_profesional.apellido}
           </p>
           <p>Fecha: {format(new Date(turno.fecha), "dd/MM/yy")}</p>
           <p>Servicio: {turno.id_servicio.nombre}</p>
+          <p>Precio: $ {turno.id_servicio.precio}</p>
         </div>
 
         <div className="max-w-1/2">
@@ -115,17 +91,11 @@ const ConfirmTurno = ({ turno }) => {
             <ClipLoader />
           ) : (
             <div className="w-2/3">
-              <Payment
-                className="bg-red"
-                initialization={initialization}
-                customization={customization}
-                onSubmit={onSubmit}
-                onReady={onReady}
-                onError={onError}
-              />
+              <Wallet initialization={{ preferenceId }} />
             </div>
           )}
         </div>
+        <StatusScreen initialization={{ paymentId: Number(paymentId) }} />
       </div>
     </div>
   );
@@ -134,12 +104,21 @@ const ConfirmTurno = ({ turno }) => {
 export default ConfirmTurno;
 
 export async function getServerSideProps(context) {
-  const { idTurno } = context.query;
+  const { idTurno, paymentId } = context.query;
 
   try {
     const turno = await clientAxios.get("/api/getTurno", {
       params: { idTurno },
     });
+
+    if (paymentId) {
+      return {
+        props: {
+          turno: turno.data,
+          paymentId: paymentId,
+        },
+      };
+    }
 
     return {
       props: {

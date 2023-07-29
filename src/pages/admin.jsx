@@ -30,7 +30,6 @@ const Admin = ({ shifts }) => {
 
   return (
     <>
-      <Nav />
       <div className="bg-pink-500 min-h-screen ">
         <h1 className="text-center text-xl text-white py-5 font-bold">
           Panel de administracíon

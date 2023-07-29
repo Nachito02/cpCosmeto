@@ -18,7 +18,6 @@ const SelectEstudio = () => {
         const response = await clientAxios.get("/api/getEstudios");
 
         setEstudios(response.data);
-        //console.log(estudios);
       } catch (error) {
         console.log(error);
       } finally {

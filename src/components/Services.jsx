@@ -38,7 +38,6 @@ const Services = ({ services }) => {
     }
 
     selectService(service);
-    // console.log(turno)
   };
   if (services.length === 0) {
     return (

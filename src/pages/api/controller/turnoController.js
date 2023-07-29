@@ -10,8 +10,6 @@ export const isAvailableHour = async (req) => {
 
   const horariosReservados = await Turno.find({ fecha: date });
 
-  console.log(horariosReservados);
-
   const availableHours = horarios.filter((horario) => {
     return !horariosReservados.some((turno) =>
       turno.horario.equals(horario._id)
@@ -30,7 +28,6 @@ export const handleReservation = async (req) => {
 
   const exist = await Turno.findOne({ fecha: date, horario: hours });
 
-  console.log(exist);
   if (exist) {
     throw new Error("Ya existe turno en la fecha y en el horario seleccionado");
   }
@@ -45,14 +42,12 @@ export const handleReservation = async (req) => {
     estado: "pendiente",
   });
 
-  console.log(newTurno);
-
   return newTurno._id;
 };
 
 export const getTurnos = async () => {
   const turnos = await Turno.find()
-    .populate("id_servicio", "nombre")
+    .populate("id_servicio", "nombre precio")
     .populate("id_cliente", "nombre correo apellido")
     .populate("horario", "horario");
 
@@ -60,14 +55,23 @@ export const getTurnos = async () => {
 };
 
 export const getTurno = async (id) => {
-  console.log(id);
   const turnos = await Turno.findById(id)
     .populate("id_servicio", "nombre precio")
     .populate("id_cliente", "nombre correo apellido")
     .populate("horario", "horario")
     .populate("id_profesional", "nombre apellido");
 
-    console.log(turnos);
-
   return turnos;
+};
+
+export const updateStatus = async (id) => {
+  const turno = await Turno.findById(id);
+
+  console.log(turno);
+
+  turno.estado = "confirmado";
+
+  await turno.save();
+
+  return "Actualizado correctamente";
 };

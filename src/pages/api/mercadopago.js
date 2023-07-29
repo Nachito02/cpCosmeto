@@ -2,21 +2,28 @@ const mercadopago = require("mercadopago");
 
 export default async function handler(req, res) {
   if (req.method === "GET") {
-    console.log("entrando");
+    const { precio, nombre, id } = req.query;
     mercadopago.configure({
       access_token: process.env.NEXT_PUBLIC_MP_TOKEN,
     });
 
     let preference = {
+      back_urls: {
+        success: `${process.env.NEXT_PUBLIC_FRONTEND_URL}/api/feedback?id=${id}`,
+        failure: `${process.env.NEXT_PUBLIC_FRONTEND_URL}/api/feedback`,
+        pending: `${process.env.NEXT_PUBLIC_FRONTEND_URL}/api/feedback`,
+      },
+
+      auto_return: "approved",
       // el "purpose": "wallet_purchase" solo permite pagos registrados
       // para permitir pagos de guests puede omitir esta propiedad
       purpose: "wallet_purchase",
       items: [
         {
-          id: "item-ID-1234",
-          title: "Meu produto",
+          id: id,
+          title: nombre,
           quantity: 1,
-          unit_price: 75.76,
+          unit_price: Number(precio),
         },
       ],
     };
