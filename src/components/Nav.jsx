@@ -17,10 +17,6 @@ const Nav = () => {
   const openModal = () => {
     setIsModalOpen(!isOpen);
   };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
   const handleHover = () => {
     setInHover(true);
   };
@@ -68,7 +64,7 @@ const Nav = () => {
       <nav className="lg:flex justify-center items-center gap-7 py-5 hidden">
         <Link href="/">Reserva tu turno</Link>
         <Link href="/servicios">Servicios</Link>
-        <Link href="">Productos</Link>
+        <Link href="/">Productos</Link>
         <Link href="" className="flex items-center gap-2">
           Carrito <AiOutlineShoppingCart size={20} />
         </Link>

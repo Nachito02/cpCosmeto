@@ -20,8 +20,15 @@ export const isAvailableHour = async (req) => {
 };
 
 export const handleReservation = async (req) => {
-  const { emailClient, nameService, date, hours, studio, professional } =
-    req.body;
+  const {
+    emailClient,
+    nameService,
+    date,
+    hours,
+    studio,
+    professional,
+    number,
+  } = req.body;
 
   const client = await Cliente.findOne({ correo: emailClient });
   const service = await Servicio.findOne({ nombre: nameService });
@@ -41,6 +48,16 @@ export const handleReservation = async (req) => {
     estudio: studio,
     estado: "pendiente",
   });
+
+  if (number) {
+    const updateCLiente = await Cliente.findById(client._id);
+
+    updateCLiente.number = number;
+
+    await updateCLiente.save();
+
+    console.log(updateCLiente);
+  }
 
   return newTurno._id;
 };
@@ -66,8 +83,6 @@ export const getTurno = async (id) => {
 
 export const updateStatus = async (id) => {
   const turno = await Turno.findById(id);
-
-  console.log(turno);
 
   turno.estado = "confirmado";
 

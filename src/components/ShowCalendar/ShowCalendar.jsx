@@ -15,9 +15,11 @@ import {
   DialogActions,
   Button,
 } from "@mui/material";
+import useCliente from "@/hooks/useCliente";
 
 const ShowCalendar = () => {
   const { data: session } = useSession();
+  const { cliente } = useCliente(session.user.email);
 
   const router = useRouter();
 
@@ -38,6 +40,12 @@ const ShowCalendar = () => {
   const handleClose = () => {
     setOpen(false);
   };
+
+  useEffect(() => {
+    if (cliente?.number) {
+      setNumber(cliente.number);
+    }
+  }, [cliente]);
 
   const fetchHorarios = async () => {
     try {
@@ -69,9 +77,7 @@ const ShowCalendar = () => {
   const tileDisabled = ({ date }) => {
     // Verificar el estudio actual y deshabilitar los días no correspondientes
     if (turno.estudio === "@colomba.ok") {
-      return ![1, 3, 5, 6].includes(date.getDay());
-    } else if (turno.estudio === "@solsilmanstudio") {
-      return ![2, 4, 6].includes(date.getDay());
+      return ![1, 2, 3, 4, 5, 6].includes(date.getDay());
     }
     return false;
   };
@@ -97,7 +103,8 @@ const ShowCalendar = () => {
         date: value,
         hours: selectHorario,
         studio: turno.estudio,
-        professional : turno.professional.id
+        professional: turno.professional.id,
+        number: number,
       });
 
       router.push(`/confirm/${response.data}`);
@@ -122,26 +129,28 @@ const ShowCalendar = () => {
       />
 
       <div className="flex justify-center flex-col items-center ">
-        <p className="my-2">Horarios disponibles</p>
         {loading ? (
           <ClipLoader />
         ) : (
-          horarios.length && (
-            <div className="grid grid-cols-3  justify-center">
-              {horarios.map((hora) => (
-                <div key={hora._id} className="flex mr-5">
-                  <input
-                    id={hora._id}
-                    name="horario"
-                    type="radio"
-                    onClick={() => {
-                      setSelectHorario(hora._id);
-                      setInputHorario(hora.horario);
-                    }}
-                  />
-                  <label htmlFor={hora._id}>{hora.horario}</label>
-                </div>
-              ))}
+          horarios && (
+            <div className="">
+              <p className="my-2 text-center">Horarios disponibles</p>
+              <div className="grid grid-cols-3 items-center justify-center">
+                {horarios.map((hora) => (
+                  <div key={hora._id} className="flex mr-5">
+                    <input
+                      id={hora._id}
+                      name="horario"
+                      type="radio"
+                      onClick={() => {
+                        setSelectHorario(hora._id);
+                        setInputHorario(hora.horario);
+                      }}
+                    />
+                    <label htmlFor={hora._id}>{hora.horario}</label>
+                  </div>
+                ))}
+              </div>
             </div>
           )
         )}
@@ -149,16 +158,29 @@ const ShowCalendar = () => {
 
       {selectHorario && (
         <div className="flex justify-center flex-col my-4">
-          <div className="flex gap-2 justify-center flex-col">
-            <label htmlFor="numero">Numero de contacto</label>
-            <input
-              value={number}
-              type="text"
-              onChange={(e) => handleNumber(e.target.value)}
-              className="border-sky-600 border-2"
-            />
-            {error && <p>{error}</p>}
-          </div>
+          {!cliente.number ? (
+            <div className="flex gap-2 justify-center flex-col">
+              <label htmlFor="numero">Numero de contacto</label>
+              <input
+                value={number}
+                type="text"
+                onChange={(e) => handleNumber(e.target.value)}
+                className="border-sky-600 border-2"
+              />
+              {error && <p>{error}</p>}
+            </div>
+          ) : (
+            <div className="text-center">
+              <p className="my-2">Tenemos guardado un numero, ¿es correcto?</p>
+
+              <input
+                className="border text-center"
+                type="text"
+                value={number}
+                onChange={(e) => handleNumber(e.target.value)}
+              />
+            </div>
+          )}
 
           <button
             onClick={() => setOpen(true)}

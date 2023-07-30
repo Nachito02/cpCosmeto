@@ -4,25 +4,24 @@ import { useSession } from "next-auth/react";
 import format from "date-fns/format";
 import dynamic from "next/dynamic";
 import { ClipLoader } from "react-spinners";
-
+import { BsWhatsapp } from "react-icons/bs";
+import { BiSolidHandLeft } from "react-icons/bi";
 const ConfirmTurno = ({ turno, paymentId }) => {
+  const [isMercadoPagoInitialized, setIsMercadoPagoInitialized] =
+    useState(false);
+
   const initMercadoPago = () =>
-    import("@mercadopago/sdk-react").then((mod) =>
+    import("@mercadopago/sdk-react").then((mod) => {
       mod.initMercadoPago(process.env.NEXT_PUBLIC_MP_PUBLIC_KEY, {
         locale: "es-AR",
-      })
-    );
+      });
+
+      setIsMercadoPagoInitialized(true);
+    });
 
   const [loading, setLoading] = useState(false);
 
   const [preferenceId, setPreferenceId] = useState("");
-
-  const Payment = dynamic(
-    () => import("@mercadopago/sdk-react").then((mod) => mod.Payment),
-    {
-      ssr: false, // Establece ssr en false para evitar problemas con el renderizado del lado del servidor
-    }
-  );
 
   const StatusScreen = dynamic(
     () => import("@mercadopago/sdk-react").then((mod) => mod.StatusScreen),
@@ -56,6 +55,7 @@ const ConfirmTurno = ({ turno, paymentId }) => {
       setLoading(false);
     }
   };
+  initMercadoPago();
 
   useEffect(() => {
     initMercadoPago();
@@ -67,37 +67,67 @@ const ConfirmTurno = ({ turno, paymentId }) => {
   const { data: session } = useSession();
 
   return (
-    <div className="">
-      <p className="text-center text-white text-xl my-5">
-        Hola {session?.user.name}
-      </p>
-      <p className="text-center text-white text-xl my-5">
-        Tu turno esta {turno.estado}
-      </p>
-      <div className="bg-white">
-        <div className="p-2 ">
-          <p>Estudio: {turno.estudio}</p>
-          <p>
-            Profesional: {turno.id_profesional.nombre}
-            {turno.id_profesional.apellido}
-          </p>
-          <p>Fecha: {format(new Date(turno.fecha), "dd/MM/yy")}</p>
-          <p>Servicio: {turno.id_servicio.nombre}</p>
-          <p>Precio: $ {turno.id_servicio.precio}</p>
-        </div>
+    <>
+      <div>
+        <p className="text-center text-white text-xl my-5">
+          Hola {session?.user.name}
+        </p>
+        <p className="text-center text-white text-xl  my-5">
+          Tu turno esta {turno.estado}
+        </p>
+      </div>
 
-        <div className="max-w-1/2">
-          {loading ? (
-            <ClipLoader />
-          ) : (
-            <div className="w-2/3">
-              <Wallet initialization={{ preferenceId }} />
+      <div className="flex flex-col lg:flex-row">
+        <div className="flex-[2]">
+          {turno.estado === "pendiente" && (
+            <div className="bg-white mx-auto">
+              <p className="text-black text-xl  my-5 text-center py-2">
+                El turno se encuentra pendiente, para confirmar el turno te
+                pedimos que abones una seña, que es el 50% del costo del
+                servicio
+              </p>
+
+              <div className="flex gap-2 items-center justify-center">
+                <p className="text-lg">
+                  Cualquier consulta puedes escribirme aca!{" "}
+                </p>
+                <BsWhatsapp color="green" />
+                <BiSolidHandLeft />
+              </div>
             </div>
           )}
         </div>
-        <StatusScreen initialization={{ paymentId: Number(paymentId) }} />
+
+        <div className="flex-[2] flex flex-col items-center bg-[#F31559]">
+          <div className="p-10 border-2 text-2xl my-10 bg-white">
+            <p>Estudio: {turno.estudio}</p>
+            <p>
+              Profesional: {turno.id_profesional.nombre}
+              {turno.id_profesional.apellido}
+            </p>
+            <p>Fecha: {format(new Date(turno.fecha), "dd/MM/yy")}</p>
+            <p>Servicio: {turno.id_servicio.nombre}</p>
+            <p>Precio: $ {turno.id_servicio.precio}</p>
+          </div>
+
+          <div className="max-w-1/2">
+            {loading ? (
+              <ClipLoader />
+            ) : (
+              turno.estado !== "confirmado" &&
+              isMercadoPagoInitialized && (
+                <div className="w-2/3">
+                  <Wallet initialization={{ preferenceId }} />
+                </div>
+              )
+            )}
+          </div>
+          {paymentId && (
+            <StatusScreen initialization={{ paymentId: Number(paymentId) }} />
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
