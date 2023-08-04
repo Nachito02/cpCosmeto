@@ -4,7 +4,8 @@ import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import { Button } from "@mui/material";
 import { format } from "date-fns";
-import Nav from "@/components/Nav";
+import Turnos from "@/components/Turnos";
+import { getSession } from "next-auth/react";
 const Admin = ({ shifts }) => {
   const [value, setValue] = useState(new Date());
 
@@ -25,7 +26,9 @@ const Admin = ({ shifts }) => {
     try {
       const response = await clientAxios.get("/api/getTurnos");
       setTurnos(response.data);
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -34,44 +37,52 @@ const Admin = ({ shifts }) => {
         <h1 className="text-center text-xl text-white py-5 font-bold">
           Panel de administracíon
         </h1>
-        <div className=" flex justify-center w-full text-center items-center gap-2">
-          <Calendar
-            className={"mb-3"}
-            calendarType="US"
-            locale="es"
-            allowPartialRange={false}
-            onChange={(e) => {
-              setValue(e);
-            }}
-            value={value}
-            selectRange={false}
-            onClickDay={(e) => filter(e)}
-          />
+        <div className=" flex flex-col justify-center w-full text-center items-center gap-2">
+          <div className="flex gap-20">
+            <Calendar
+              className={"mb-3"}
+              calendarType="US"
+              locale="es"
+              allowPartialRange={false}
+              onChange={(e) => {
+                setValue(e);
+              }}
+              value={value}
+              selectRange={false}
+              onClickDay={(e) => filter(e)}
+            />
 
-          <Button className="w-21 h-21" variant="contained" onClick={reset}>
-            Mostrar todos los turnos
-          </Button>
+            <div className="flex flex-col gap-5">
+              <Button
+                className="w-21 h-21 bg-red-200 text-black"
+                variant="contained"
+                onClick={reset}
+              >
+                Mostrar todos los turnos
+              </Button>
+              <Button
+                className="w-21 h-21 bg-red-200 text-black"
+                variant="contained"
+                onClick={reset}
+              >
+                Dia libre
+              </Button>
+              <Button
+                className="w-21 h-21 bg-red-200 text-black"
+                variant="contained"
+                onClick={reset}
+              >
+                Hora libre
+              </Button>
+            </div>
+          </div>
         </div>
-        <h1 className="text-center">Todos los turnos</h1>
+        <h1 className="text-center text-2xl text-white my-10">
+          Todos los turnos
+        </h1>
 
         {/* <Table /> */}
-        <div className="flex gap-2">
-          {turnos.length ? (
-            turnos.map((turno) => (
-              <div className="bg-white p-3" key={turno._id}>
-                <p>
-                  Cliente:{turno.id_cliente.nombre} {turno.id_cliente.apellido}
-                </p>
-                <p>Fecha:{format(new Date(turno.fecha), "dd/MM/yyyy")}</p>
-                <p>Horario:{turno.horario.horario}</p>
-                <p>Estado:{turno.estado}</p>
-                <p>Servicio:{turno.id_servicio.nombre}</p>
-              </div>
-            ))
-          ) : (
-            <p>No hay turnos en el dia</p>
-          )}
-        </div>
+        <Turnos turnos={turnos} />
       </div>
     </>
   );
@@ -79,7 +90,20 @@ const Admin = ({ shifts }) => {
 
 export default Admin;
 
-export async function getServerSideProps() {
+export async function getServerSideProps(context) {
+  const session = await getSession(context);
+
+  console.log(session);
+
+  if (!session && session.user.email !== "arguellojuan08@gmail.com") {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+
   const shifts = await clientAxios.get("/api/getTurnos");
   return {
     props: {
