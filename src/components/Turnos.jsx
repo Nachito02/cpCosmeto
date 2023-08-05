@@ -2,12 +2,13 @@ import React from "react";
 import statusColor from "@/helpers/statusColor";
 import format from "date-fns/format";
 const Turnos = ({ turnos }) => {
+  console.log(turnos);
   return (
-    <div className="grid grid-cols-4 items-center gap-2 my-10 p-3">
+    <div className="grid  md:grid-cols-3 lg:grid-cols-4 items-center gap-2 my-10 p-3">
       {turnos.length ? (
         turnos.map((turno) => (
           <div
-            className={`bg-white p-3 ${statusColor(
+            className={` text-black font-bold p-3  ${statusColor(
               turno.estado
             )} hover:cursor-pointer`}
             key={turno._id}

@@ -37,8 +37,8 @@ const Admin = ({ shifts }) => {
         <h1 className="text-center text-xl text-white py-5 font-bold">
           Panel de administracíon
         </h1>
-        <div className=" flex flex-col justify-center w-full text-center items-center gap-2">
-          <div className="flex gap-20">
+        <div className=" flex justify-center w-full text-center items-center gap-2">
+          <div className="flex lg:flex-row flex-col lg:gap-20">
             <Calendar
               className={"mb-3"}
               calendarType="US"
@@ -74,6 +74,14 @@ const Admin = ({ shifts }) => {
               >
                 Hora libre
               </Button>
+
+              <Button
+                className="w-21 h-21 bg-red-200 text-black"
+                variant="contained"
+                onClick={reset}
+              >
+                Agregar turno
+              </Button>
             </div>
           </div>
         </div>
@@ -95,7 +103,7 @@ export async function getServerSideProps(context) {
 
   console.log(session);
 
-  if (!session && session.user.email !== "arguellojuan08@gmail.com") {
+  if (!session && session.user.email !== process.env.NEXT_PUCLIC_OWNER_EMAIL) {
     return {
       redirect: {
         destination: "/",
