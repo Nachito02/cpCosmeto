@@ -13,10 +13,12 @@ export default async function handler(req, res) {
     }
   }
 
-  res.json({
-    Payment: req.query.payment_id,
-    Status: req.query.status,
-    MerchantOrder: req.query.merchant_order_id,
-    Id: req.query.id,
-  });
+  if (req.query.status === "null") {
+    return res.redirect(
+      `${process.env.NEXT_PUBLIC_FRONTEND_URL}/confirm/${req.query.id}`
+    );
+  }
+  return res.redirect(
+    `${process.env.NEXT_PUBLIC_FRONTEND_URL}/confirm/${req.query.id}`
+  );
 }

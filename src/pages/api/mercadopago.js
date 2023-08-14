@@ -11,8 +11,8 @@ export default async function handler(req, res) {
       let preference = {
         back_urls: {
           success: `${process.env.NEXT_PUBLIC_FRONTEND_URL}/api/feedback?id=${id}`,
-          failure: `${process.env.NEXT_PUBLIC_FRONTEND_URL}/api/feedback`,
-          pending: `${process.env.NEXT_PUBLIC_FRONTEND_URL}/api/feedback`,
+          failure: `${process.env.NEXT_PUBLIC_FRONTEND_URL}/api/feedback?id=${id}`,
+          pending: `${process.env.NEXT_PUBLIC_FRONTEND_URL}/api/feedback?id=${id}`,
         },
 
         auto_return: "approved",

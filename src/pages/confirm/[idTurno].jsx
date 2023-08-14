@@ -7,6 +7,9 @@ import { ClipLoader } from "react-spinners";
 import { BsWhatsapp } from "react-icons/bs";
 import { BiSolidHandLeft } from "react-icons/bi";
 const ConfirmTurno = ({ turno, paymentId }) => {
+  const { data: session } = useSession();
+  const [loading, setLoading] = useState(false);
+  const [preferenceId, setPreferenceId] = useState("");
   const [isMercadoPagoInitialized, setIsMercadoPagoInitialized] =
     useState(false);
 
@@ -18,10 +21,6 @@ const ConfirmTurno = ({ turno, paymentId }) => {
 
       setIsMercadoPagoInitialized(true);
     });
-
-  const [loading, setLoading] = useState(false);
-
-  const [preferenceId, setPreferenceId] = useState("");
 
   const StatusScreen = dynamic(
     () => import("@mercadopago/sdk-react").then((mod) => mod.StatusScreen),
@@ -38,33 +37,33 @@ const ConfirmTurno = ({ turno, paymentId }) => {
   );
 
   const getPreference = async () => {
-    try {
-      setLoading(true);
-      const response = await clientAxios.get("/api/mercadopago", {
-        params: {
-          id: turno._id,
-          precio: turno.id_servicio.precio / 2,
-          nombre: turno.id_servicio.nombre,
-        },
-      });
+    if (!isMercadoPagoInitialized) {
+      try {
+        setLoading(true);
+        const response = await clientAxios.get("/api/mercadopago", {
+          params: {
+            id: turno._id,
+            precio: turno.id_servicio.precio / 2,
+            nombre: turno.id_servicio.nombre,
+          },
+        });
 
-      setPreferenceId(response.data);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
+        setPreferenceId(response.data);
+        console.log(response.data);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
+      }
     }
   };
-  initMercadoPago();
 
   useEffect(() => {
     initMercadoPago();
-    getPreference();
 
+    getPreference();
     return;
   }, []);
-
-  const { data: session } = useSession();
 
   return (
     <>
@@ -78,7 +77,7 @@ const ConfirmTurno = ({ turno, paymentId }) => {
       </div>
 
       <div className="flex flex-col lg:flex-row">
-        <div className="flex-[2]">
+        <div className={`${turno.estado != "confirmado" ? "flex-[2]" : ""}`}>
           {turno.estado === "pendiente" && (
             <div className="bg-white mx-auto">
               <p className="text-black text-xl  my-5 text-center py-2">
