@@ -28,11 +28,7 @@ const AgregarTurno = ({ onClick }) => {
     setOpen(!open);
   };
 
-  const handleReservation = async () => {
-
-    
-
-  };
+  const handleReservation = async () => {};
 
   const handleClickDay = (e) => {
     setValue(e);
@@ -89,7 +85,9 @@ const AgregarTurno = ({ onClick }) => {
         >
           <option value="">selecione una opcion</option>
           {categorias.map((categoria) => (
-            <option value={categoria.id}>{categoria.nombre}</option>
+            <option key={categoria.id} value={categoria.id}>
+              {categoria.nombre}
+            </option>
           ))}
         </select>
 
