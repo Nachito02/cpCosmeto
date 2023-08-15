@@ -7,29 +7,26 @@ import { useContext } from "react";
 import turnosContext from "@/context/Turnos/turnosContext";
 import Head from "next/head";
 const Turno = ({ services }) => {
-
-
   // console.log(services)
   const router = useRouter();
   const { categoria } = router.query;
 
-  const TurnosContext = useContext(turnosContext)
+  const TurnosContext = useContext(turnosContext);
 
-  const {clearService, clearTurno, turno} = TurnosContext
+  const { clearService, clearTurno, turno } = TurnosContext;
   useEffect(() => {
-    
-    return() => {
-      clearTurno()
-    }
-  },[])
+    return () => {
+      clearTurno();
+    };
+  }, []);
 
   return (
     <>
       <Head>
         <title>{`CP COSMETO - ${categoria}`}</title>
       </Head>
-        
-        <Services services={services} />
+
+      <Services services={services} />
     </>
   );
 };

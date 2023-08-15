@@ -17,8 +17,6 @@ const useCliente = (email) => {
         });
         // Suponiendo que la API devuelve un objeto con los datos del cliente
         setCliente(response.data);
-
-        console.log(cliente);
         setLoading(false);
       } catch (error) {
         setError("Error al obtener los datos del cliente.");

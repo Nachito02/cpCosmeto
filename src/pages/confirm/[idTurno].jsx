@@ -49,7 +49,6 @@ const ConfirmTurno = ({ turno, paymentId }) => {
         });
 
         setPreferenceId(response.data);
-        console.log(response.data);
       } catch (error) {
         console.log(error);
       } finally {
@@ -126,6 +125,7 @@ const ConfirmTurno = ({ turno, paymentId }) => {
           )}
         </div>
       </div>
+      
     </>
   );
 };

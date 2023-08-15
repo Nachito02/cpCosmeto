@@ -5,11 +5,18 @@ import "react-calendar/dist/Calendar.css";
 import { Button } from "@mui/material";
 import { format } from "date-fns";
 import Turnos from "@/components/Turnos";
+import Modal from "@/components/modals/Modal";
 import { getSession } from "next-auth/react";
 const Admin = ({ shifts }) => {
   const [value, setValue] = useState(new Date());
 
   const [turnos, setTurnos] = useState(shifts);
+
+  const [agregarTurnoModal, setAgregarTurnoModal] = useState(false);
+
+  const openModal = () => {
+    setAgregarTurnoModal(!agregarTurnoModal);
+  };
 
   const filter = (day) => {
     const filtered = shifts.filter(
@@ -33,7 +40,7 @@ const Admin = ({ shifts }) => {
 
   return (
     <>
-      <div className="bg-pink-500 min-h-screen ">
+      <div className="bg-pink-500 min-h-screen  ">
         <h1 className="text-center text-xl text-white py-5 font-bold">
           Panel de administracíon
         </h1>
@@ -78,7 +85,7 @@ const Admin = ({ shifts }) => {
               <Button
                 className="w-21 h-21 bg-red-200 text-black"
                 variant="contained"
-                onClick={reset}
+                onClick={openModal}
               >
                 Agregar turno
               </Button>
@@ -91,6 +98,8 @@ const Admin = ({ shifts }) => {
 
         {/* <Table /> */}
         <Turnos turnos={turnos} />
+
+        <Modal isOpen={agregarTurnoModal} onClick={openModal} />
       </div>
     </>
   );
@@ -101,7 +110,6 @@ export default Admin;
 export async function getServerSideProps(context) {
   const session = await getSession(context);
 
-  console.log(session);
 
   if (!session && session.user.email !== process.env.NEXT_PUCLIC_OWNER_EMAIL) {
     return {
