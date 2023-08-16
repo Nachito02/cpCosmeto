@@ -62,6 +62,7 @@ export const handleReservation = async (req) => {
   return newTurno._id;
 };
 
+
 export const getTurnos = async () => {
   const turnos = await Turno.find()
     .populate("id_servicio", "nombre precio")

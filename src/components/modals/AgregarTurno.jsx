@@ -4,15 +4,11 @@ import { IoMdClose } from "react-icons/io";
 import useCategoria from "@/hooks/useCategoria";
 import clientAxios from "../../../config/clientAxios";
 import { ClipLoader } from "react-spinners";
-import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogContentText,
-} from "@mui/material";
+import useEstudios from "@/hooks/useEstudios";
 
 const AgregarTurno = ({ onClick }) => {
   const { categorias } = useCategoria();
+  const { estudios } = useEstudios();
   const [horarios, setHorarios] = useState([]);
   const [value, setValue] = useState("");
   const [selectHorario, setSelectHorario] = useState(null);
@@ -21,14 +17,17 @@ const AgregarTurno = ({ onClick }) => {
   const [open, setOpen] = useState(false);
 
   const [categoria, setCategoria] = useState("");
-
   const [nombre, setNombre] = useState("");
 
   const openModal = () => {
     setOpen(!open);
   };
 
-  const handleReservation = async () => {};
+  const handleReservation = async () => {
+    try {
+      const turno = await clientAxios.post("/AddManualTurno", {});
+    } catch (error) {}
+  };
 
   const handleClickDay = (e) => {
     setValue(e);
@@ -77,19 +76,23 @@ const AgregarTurno = ({ onClick }) => {
             onChange={(e) => setNombre(e.value)}
           />
         </div>
-        <select
-          className="text-center"
-          onChange={(e) => {
-            setCategoria(e.target.value);
-          }}
-        >
-          <option value="">selecione una opcion</option>
-          {categorias.map((categoria) => (
-            <option key={categoria.id} value={categoria.id}>
-              {categoria.nombre}
-            </option>
-          ))}
-        </select>
+
+        <div className="flex flex-col items-center gap-2">
+          <label htmlFor="">Seleccione el servicio</label>
+          <select
+            className="text-center"
+            onChange={(e) => {
+              setCategoria(e.target.value);
+            }}
+          >
+            <option value="">selecione una opcion</option>
+            {categorias.map((categoria) => (
+              <option key={categoria.id} value={categoria.id}>
+                {categoria.nombre}
+              </option>
+            ))}
+          </select>
+        </div>
 
         <Calendar
           calendarType="US"
@@ -119,6 +122,23 @@ const AgregarTurno = ({ onClick }) => {
               ))
             )}
           </div>
+          <div className="flex flex-col items-center">
+            <label htmlFor="estado">Seleccione el estado del turno</label>
+            <select name="estado" id="">
+              <option value="pendiente">Pendiente</option>
+              <option value="confirmado">Confirmado</option>
+              <option value="confirmado">Completado</option>
+              <option value="confirmado">Cancelado</option>
+            </select>
+          </div>
+
+          <div className="flex flex-col">
+            <select name="" id="">
+              <option value="">Seleccione una opcion</option>
+              {estudios.length &&
+                estudios.map((estudio) => <option>{estudio.nombre}</option>)}
+            </select>
+          </div>
         </div>
 
         <button
@@ -128,38 +148,6 @@ const AgregarTurno = ({ onClick }) => {
           Reservar turno
         </button>
       </div>
-
-      {/* <Dialog
-        open={open}
-        onClose={openModal}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">
-          {"¿Desea confirmar el turno?"}
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            <p>Nombre : {name}</p>
-            <p>Servicio : {service}</p>
-            <p>Profesional : {turno.professional.nombre}</p>
-            <p>Horario : {inputHorario}</p>
-            <p>Estudio : {turno.estudio}</p>
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Cancelar</Button>
-          <Button
-            onClick={(e) => {
-              handleReservation();
-            }}
-            type="submit"
-            autoFocus
-          >
-            Confirmar
-          </Button>
-        </DialogActions>
-      </Dialog> */}
     </div>
   );
 };
