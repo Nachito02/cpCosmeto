@@ -136,7 +136,9 @@ const AgregarTurno = ({ onClick }) => {
             <select name="" id="">
               <option value="">Seleccione una opcion</option>
               {estudios.length &&
-                estudios.map((estudio) => <option>{estudio.nombre}</option>)}
+                estudios.map((estudio) => (
+                  <option key={estudio.id}>{estudio.nombre}</option>
+                ))}
             </select>
           </div>
         </div>
