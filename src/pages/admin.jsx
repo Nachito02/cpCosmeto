@@ -7,15 +7,19 @@ import { format } from "date-fns";
 import Turnos from "@/components/Turnos";
 import Modal from "@/components/modals/Modal";
 import { getSession } from "next-auth/react";
+import useProfesional from "@/hooks/useProfesional";
 const Admin = ({ shifts }) => {
   const [value, setValue] = useState(new Date());
 
   const [turnos, setTurnos] = useState(shifts);
 
-  const [agregarTurnoModal, setAgregarTurnoModal] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const { manualTurnos } = useProfesional();
+
+  console.log(manualTurnos);
 
   const openModal = () => {
-    setAgregarTurnoModal(!agregarTurnoModal);
+    setIsOpen(!isOpen);
   };
 
   const filter = (day) => {
@@ -99,7 +103,7 @@ const Admin = ({ shifts }) => {
         {/* <Table /> */}
         <Turnos turnos={turnos} />
 
-        <Modal isOpen={agregarTurnoModal} onClick={openModal} />
+        <Modal isOpen={isOpen} setIsOpen={setIsOpen} onClick={openModal} />
       </div>
     </>
   );
@@ -109,7 +113,6 @@ export default Admin;
 
 export async function getServerSideProps(context) {
   const session = await getSession(context);
-
 
   if (!session && session.user.email !== process.env.NEXT_PUCLIC_OWNER_EMAIL) {
     return {

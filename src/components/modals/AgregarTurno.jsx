@@ -21,35 +21,42 @@ const AgregarTurno = ({ onClick }) => {
 
   const [categoria, setCategoria] = useState("");
 
+
   const [id_servicio, setIdServicio] = useState("");
-  const [id_professional, setIdProfessional] = useState("");
+  const [id_profesional, setIdProfessional] = useState("");
   const [nombre, setNombre] = useState("");
   const [estudio, setEstudio] = useState("");
   const [horario, setHorario] = useState("");
   const [estado, setEstado] = useState("");
 
-  const [intpu, setInput] = useState({
+  const [input, setInput] = useState({
     id_servicio: "",
-    id_professional: "",
+    id_profesional: "",
     nombre: "",
-    fecha: "",
-    horario: "",
     estudio: "",
     estado: "",
   });
 
-  const handleReservation = async () => {
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setInput((prevInput) => ({
+      ...prevInput,
+      [name]: value,
+    }));
+  };
+  const handleReservation = async (e) => {
+    e.preventDefault();
     try {
-      const turno = await clientAxios.post("/AddManualTurno", {
-        id_servicio,
-        id_professional,
-        nombre,
-        fecha,
-        horario,
-        estudio,
-        estado,
+      const turno = await clientAxios.post("api/turnoManual", {
+        ...input,
+        horario: selectHorario,
+        fecha: value,
       });
-    } catch (error) {}
+
+      onClick();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleClickDay = (e) => {
@@ -78,8 +85,6 @@ const AgregarTurno = ({ onClick }) => {
     }
   }, [value]);
 
-  const handleInputChange = (e) => {};
-
   return (
     <div className="w-3/6 mt-20 bg-white">
       <div className="flex items-end p-6 rounded-t justify-end relative border-b-[1px]">
@@ -87,114 +92,136 @@ const AgregarTurno = ({ onClick }) => {
           <IoMdClose />
         </button>
       </div>
-      <div className="text-center">
-        <h2 className="text-lg">Agrega un turno manualmente</h2>
-      </div>
-      <div className="flex items-center flex-col gap-2 justify-center p-6">
-        <div className="flex flex-col items-center">
-          <label htmlFor="nombre">Nombre del cliente</label>
-          <input
-            type="text"
-            id="nombre"
-            value={nombre}
-            className="border-2"
-            onChange={(e) => setNombre(e.value)}
-          />
+      <form action="">
+        <div className="text-center">
+          <h2 className="text-lg">Agrega un turno manualmente</h2>
         </div>
-
-        <div className="flex flex-col items-center gap-2">
-          <label htmlFor="">Seleccione el servicio</label>
-          <select
-            className="text-center"
-            onChange={(e) => {
-              setCategoria(e.target.value);
-            }}
-          >
-            <option value="">selecione una opcion</option>
-            {categorias &&
-              categorias.map((categoria) => (
-                <option key={categoria.id} value={categoria.id}>
-                  {categoria.nombre}
-                </option>
-              ))}
-          </select>
-        </div>
-
-        <div className="flex flex-col items-center gap-2">
-          <label htmlFor="">Seleccione el profesional</label>
-          <select
-            className="text-center"
-            onChange={(e) => {
-              setCategoria(e.target.value);
-            }}
-          >
-            <option value="">selecione una opcion</option>
-            {professionals &&
-              professionals.map((professional) => (
-                <option key={professional.id} value={professional.id}>
-                  {professional.nombre}
-                </option>
-              ))}
-          </select>
-        </div>
-
-        <Calendar
-          calendarType="US"
-          locale="es"
-          onClickDay={(e) => handleClickDay(e)}
-        />
-
-        <div>
-          <div className="grid grid-cols-3 items-center justify-center">
-            {loading ? (
-              <ClipLoader />
-            ) : (
-              horarios &&
-              horarios.map((hora) => (
-                <div key={hora._id} className="flex mr-5">
-                  <input
-                    id={hora._id}
-                    name="horario"
-                    type="radio"
-                    onClick={() => {
-                      setSelectHorario(hora._id);
-                      setInputHorario(hora.horario);
-                    }}
-                  />
-                  <label htmlFor={hora._id}>{hora.horario}</label>
-                </div>
-              ))
-            )}
-          </div>
+        <div className="flex items-center flex-col gap-2 justify-center p-6">
           <div className="flex flex-col items-center">
-            <label htmlFor="estado">Seleccione el estado del turno</label>
-            <select name="estado" id="">
-              <option value="pendiente">Pendiente</option>
-              <option value="confirmado">Confirmado</option>
-              <option value="completado">Completado</option>
-              <option value="cancelado">Cancelado</option>
-            </select>
+            <label htmlFor="nombre">Nombre del cliente</label>
+            <input
+              required
+              name="nombre"
+              type="text"
+              id="nombre"
+              value={input.nombre}
+              className="border-2"
+              onChange={(e) => handleInputChange(e)}
+            />
           </div>
 
-          <div className="flex flex-col items-center">
-            <label htmlFor="">Seleccione el estudio</label>
-            <select name="" id="">
-              <option value="">Seleccione una opcion</option>
-              {estudios.length &&
-                estudios.map((estudio) => (
-                  <option key={estudio.id}>{estudio.nombre}</option>
+          <div className="flex flex-col items-center gap-2">
+            <label htmlFor="">Seleccione el servicio</label>
+            <select
+              required
+              name="id_servicio"
+              className="text-center"
+              onChange={(e) => {
+                handleInputChange(e);
+              }}
+            >
+              <option value="">selecione una opcion</option>
+              {categorias &&
+                categorias.map((categoria) => (
+                  <option key={categoria._id} value={categoria._id}>
+                    {categoria.nombre}
+                  </option>
                 ))}
             </select>
           </div>
-        </div>
 
-        <button
-          className="text-white bg-pink-500 py-2 px-7 my-2"
-          onClick={handleReservation}
-        >
-          Reservar turno
-        </button>
-      </div>
+          <div className="flex flex-col items-center gap-2">
+            <label htmlFor="">Seleccione el profesional</label>
+            <select
+              required
+              name="id_profesional"
+              className="text-center"
+              onChange={(e) => {
+                handleInputChange(e);
+              }}
+            >
+              <option value="">selecione una opcion</option>
+              {professionals &&
+                professionals.map((professional) => (
+                  <option key={professional._id} value={professional._id}>
+                    {professional.nombre}
+                  </option>
+                ))}
+            </select>
+          </div>
+
+          <Calendar
+            calendarType="US"
+            locale="es"
+            onClickDay={(e) => handleClickDay(e)}
+          />
+
+          <div>
+            <div className="grid grid-cols-3 items-center justify-center">
+              {loading ? (
+                <ClipLoader />
+              ) : (
+                horarios &&
+                horarios.map((hora) => (
+                  <div key={hora._id} className="flex mr-5">
+                    <input
+                      required
+                      id={hora._id}
+                      name="horario"
+                      type="radio"
+                      onClick={() => {
+                        setSelectHorario(hora._id);
+                        setInputHorario(hora.horario);
+                      }}
+                    />
+                    <label htmlFor={hora._id}>{hora.horario}</label>
+                  </div>
+                ))
+              )}
+            </div>
+            <div className="flex flex-col items-center">
+              <label htmlFor="estado">Seleccione el estado del turno</label>
+              <select
+                required
+                name="estado"
+                id=""
+                onChange={(e) => handleInputChange(e)}
+              >
+                <option value="pendiente">Pendiente</option>
+                <option value="confirmado">Confirmado</option>
+                <option value="completado">Completado</option>
+                <option value="cancelado">Cancelado</option>
+              </select>
+            </div>
+
+            <div className="flex flex-col items-center">
+              <label htmlFor="">Seleccione el estudio</label>
+              <select
+                required
+                name="estudio"
+                onChange={(e) => handleInputChange(e)}
+                id=""
+              >
+                <option>Seleccione una opcion</option>
+                {estudios.length &&
+                  estudios.map((estudio) => (
+                    <option value={estudio.id} key={estudio.id}>
+                      {estudio.nombre}
+                    </option>
+                  ))}
+              </select>
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            className="text-white bg-pink-500 py-2 px-7 my-2"
+            onClick={handleReservation}
+          >
+            Reservar turno
+          </button>
+        </div>
+      </form>
     </div>
   );
 };

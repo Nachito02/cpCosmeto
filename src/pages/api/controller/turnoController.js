@@ -2,6 +2,7 @@ import Cliente from "../models/Cliente";
 import Horarios from "../models/Horarios";
 import Servicio from "../models/Servicio";
 import Turno from "../models/Turno";
+import TurnoManual from "../models/TurnoManual";
 
 export const isAvailableHour = async (req) => {
   const horarios = await Horarios.find();
@@ -62,8 +63,9 @@ export const handleReservation = async (req) => {
   return newTurno._id;
 };
 
-
 export const getTurnos = async () => {
+  const manualTurnos = await TurnoManual.find();
+
   const turnos = await Turno.find()
     .populate("id_servicio", "nombre precio")
     .populate("id_cliente", "nombre correo apellido")
@@ -90,4 +92,17 @@ export const updateStatus = async (id) => {
   await turno.save();
 
   return "Actualizado correctamente";
+};
+
+export const addTurnoManual = async (body) => {
+  const turno = await TurnoManual.create(body);
+
+  return turno;
+};
+
+
+export const getManualTurno = async () => {
+  const turnos = await TurnoManual.find()
+
+  return turnos;
 };
