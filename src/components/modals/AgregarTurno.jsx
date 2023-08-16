@@ -5,27 +5,50 @@ import useCategoria from "@/hooks/useCategoria";
 import clientAxios from "../../../config/clientAxios";
 import { ClipLoader } from "react-spinners";
 import useEstudios from "@/hooks/useEstudios";
+import useProfesional from "@/hooks/useProfesional";
 
 const AgregarTurno = ({ onClick }) => {
   const { categorias } = useCategoria();
   const { estudios } = useEstudios();
+  const { professionals } = useProfesional();
+
   const [horarios, setHorarios] = useState([]);
   const [value, setValue] = useState("");
-  const [selectHorario, setSelectHorario] = useState(null);
   const [inputHorario, setInputHorario] = useState(null);
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
+  const [selectHorario, setSelectHorario] = useState(null);
 
   const [categoria, setCategoria] = useState("");
-  const [nombre, setNombre] = useState("");
 
-  const openModal = () => {
-    setOpen(!open);
-  };
+  const [id_servicio, setIdServicio] = useState("");
+  const [id_professional, setIdProfessional] = useState("");
+  const [nombre, setNombre] = useState("");
+  const [estudio, setEstudio] = useState("");
+  const [horario, setHorario] = useState("");
+  const [estado, setEstado] = useState("");
+
+  const [intpu, setInput] = useState({
+    id_servicio: "",
+    id_professional: "",
+    nombre: "",
+    fecha: "",
+    horario: "",
+    estudio: "",
+    estado: "",
+  });
 
   const handleReservation = async () => {
     try {
-      const turno = await clientAxios.post("/AddManualTurno", {});
+      const turno = await clientAxios.post("/AddManualTurno", {
+        id_servicio,
+        id_professional,
+        nombre,
+        fecha,
+        horario,
+        estudio,
+        estado,
+      });
     } catch (error) {}
   };
 
@@ -55,8 +78,10 @@ const AgregarTurno = ({ onClick }) => {
     }
   }, [value]);
 
+  const handleInputChange = (e) => {};
+
   return (
-    <div className="w-3/6 bg-white">
+    <div className="w-3/6 mt-20 bg-white">
       <div className="flex items-end p-6 rounded-t justify-end relative border-b-[1px]">
         <button onClick={onClick}>
           <IoMdClose />
@@ -86,11 +111,30 @@ const AgregarTurno = ({ onClick }) => {
             }}
           >
             <option value="">selecione una opcion</option>
-            {categorias.map((categoria) => (
-              <option key={categoria.id} value={categoria.id}>
-                {categoria.nombre}
-              </option>
-            ))}
+            {categorias &&
+              categorias.map((categoria) => (
+                <option key={categoria.id} value={categoria.id}>
+                  {categoria.nombre}
+                </option>
+              ))}
+          </select>
+        </div>
+
+        <div className="flex flex-col items-center gap-2">
+          <label htmlFor="">Seleccione el profesional</label>
+          <select
+            className="text-center"
+            onChange={(e) => {
+              setCategoria(e.target.value);
+            }}
+          >
+            <option value="">selecione una opcion</option>
+            {professionals &&
+              professionals.map((professional) => (
+                <option key={professional.id} value={professional.id}>
+                  {professional.nombre}
+                </option>
+              ))}
           </select>
         </div>
 
@@ -127,12 +171,13 @@ const AgregarTurno = ({ onClick }) => {
             <select name="estado" id="">
               <option value="pendiente">Pendiente</option>
               <option value="confirmado">Confirmado</option>
-              <option value="confirmado">Completado</option>
-              <option value="confirmado">Cancelado</option>
+              <option value="completado">Completado</option>
+              <option value="cancelado">Cancelado</option>
             </select>
           </div>
 
-          <div className="flex flex-col">
+          <div className="flex flex-col items-center">
+            <label htmlFor="">Seleccione el estudio</label>
             <select name="" id="">
               <option value="">Seleccione una opcion</option>
               {estudios.length &&
