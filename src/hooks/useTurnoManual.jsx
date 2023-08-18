@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-
+import clientAxios from "../../config/clientAxios";
 const useTurnoManual = () => {
+  const [loading, setIsLoading] = useState(false);
   const [manualTurnos, setManualTurnos] = useState();
   useEffect(() => {
     const getManualTurnos = async () => {

@@ -1,12 +1,16 @@
 import { addTurnoManual, getManualTurno } from "./controller/turnoController";
 
 export default async function handler(req, res) {
+    console.log('h');
+
   if (req.method !== "GET" && req.method !== "POST") {
     return res.status(405).end();
   }
 
   if (req.method === "GET") {
     try {
+
+
       const response = await getManualTurno();
 
       res.status(200).json(response);
@@ -22,6 +26,7 @@ export default async function handler(req, res) {
 
       res.status(200).json(response);
     } catch (error) {
+        console.log(error);
       return res.status(405).json("Hubo un error");
     }
   }

@@ -21,7 +21,6 @@ const AgregarTurno = ({ onClick }) => {
 
   const [categoria, setCategoria] = useState("");
 
-
   const [id_servicio, setIdServicio] = useState("");
   const [id_profesional, setIdProfessional] = useState("");
   const [nombre, setNombre] = useState("");
@@ -187,6 +186,8 @@ const AgregarTurno = ({ onClick }) => {
                 id=""
                 onChange={(e) => handleInputChange(e)}
               >
+                <option value="">Seleccione una opcion</option>
+
                 <option value="pendiente">Pendiente</option>
                 <option value="confirmado">Confirmado</option>
                 <option value="completado">Completado</option>

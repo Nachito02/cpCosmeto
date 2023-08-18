@@ -7,14 +7,14 @@ import { format } from "date-fns";
 import Turnos from "@/components/Turnos";
 import Modal from "@/components/modals/Modal";
 import { getSession } from "next-auth/react";
-import useProfesional from "@/hooks/useProfesional";
-const Admin = ({ shifts }) => {
+import useTurnoManual from "@/hooks/useTurnoManual";
+const Admin = ({ shifts,  }) => {
   const [value, setValue] = useState(new Date());
 
   const [turnos, setTurnos] = useState(shifts);
 
   const [isOpen, setIsOpen] = useState(false);
-  const { manualTurnos } = useProfesional();
+  const { manualTurnos } = useTurnoManual();
 
   console.log(manualTurnos);
 
@@ -96,12 +96,18 @@ const Admin = ({ shifts }) => {
             </div>
           </div>
         </div>
-        <h1 className="text-center text-2xl text-white my-10">
+        <h1 className="text-center text-2xl text-white my-5">
           Todos los turnos
         </h1>
 
         {/* <Table /> */}
         <Turnos turnos={turnos} />
+
+        <h1 className="text-center text-2xl text-white my-5">
+          Turnos Manuales
+        </h1>
+        <Turnos turnos={manualTurnos} />
+
 
         <Modal isOpen={isOpen} setIsOpen={setIsOpen} onClick={openModal} />
       </div>
@@ -124,6 +130,7 @@ export async function getServerSideProps(context) {
   }
 
   const shifts = await clientAxios.get("/api/getTurnos");
+
   return {
     props: {
       shifts: shifts.data,

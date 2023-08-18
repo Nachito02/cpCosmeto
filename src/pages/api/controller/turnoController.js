@@ -10,9 +10,12 @@ export const isAvailableHour = async (req) => {
   const { date } = req;
 
   const horariosReservados = await Turno.find({ fecha: date });
+  const horariosturnosManual = await TurnoManual.find({ fecha: date });
+
+  const horariosDisponibles = horariosReservados.concat(horariosturnosManual);
 
   const availableHours = horarios.filter((horario) => {
-    return !horariosReservados.some((turno) =>
+    return !horariosDisponibles.some((turno) =>
       turno.horario.equals(horario._id)
     );
   });
@@ -100,9 +103,7 @@ export const addTurnoManual = async (body) => {
   return turno;
 };
 
-
 export const getManualTurno = async () => {
-  const turnos = await TurnoManual.find()
-
+  const turnos = await TurnoManual.find().populate("horario");
   return turnos;
 };
