@@ -8,18 +8,24 @@ import Turnos from "@/components/Turnos";
 import Modal from "@/components/modals/Modal";
 import { getSession } from "next-auth/react";
 import useTurnoManual from "@/hooks/useTurnoManual";
-const Admin = ({ shifts,  }) => {
+import AgregarTurno from "@/components/modals/AgregarTurno";
+import ReservarHorario from "@/components/modals/ReservarHorario";
+const Admin = ({ shifts }) => {
   const [value, setValue] = useState(new Date());
 
   const [turnos, setTurnos] = useState(shifts);
 
   const [isOpen, setIsOpen] = useState(false);
-  const { manualTurnos } = useTurnoManual();
+  const [isOpenHorarioModal, setIsHorarioModal] = useState(false);
 
-  console.log(manualTurnos);
+  const { manualTurnos } = useTurnoManual();
 
   const openModal = () => {
     setIsOpen(!isOpen);
+  };
+
+  const openModalHorario = () => {
+    setIsHorarioModal(!isOpenHorarioModal);
   };
 
   const filter = (day) => {
@@ -81,7 +87,7 @@ const Admin = ({ shifts,  }) => {
               <Button
                 className="w-21 h-21 bg-red-200 text-black"
                 variant="contained"
-                onClick={reset}
+                onClick={openModalHorario}
               >
                 Hora libre
               </Button>
@@ -108,8 +114,17 @@ const Admin = ({ shifts,  }) => {
         </h1>
         <Turnos turnos={manualTurnos} />
 
+        <Modal
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+          children={<AgregarTurno onClick={openModal} />}
+        />
 
-        <Modal isOpen={isOpen} setIsOpen={setIsOpen} onClick={openModal} />
+        <Modal
+          isOpen={isOpenHorarioModal}
+          setIsOpen={setIsHorarioModal}
+          children={<ReservarHorario onClick={openModalHorario} />}
+        />
       </div>
     </>
   );

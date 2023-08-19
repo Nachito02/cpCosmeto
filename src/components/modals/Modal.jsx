@@ -2,7 +2,7 @@ import React from "react";
 import AgregarTurno from "./AgregarTurno";
 import { IoMdClose } from "react-icons/io";
 
-const Modal = ({ isOpen, onClick }) => {
+const Modal = ({ isOpen, onClick, children }) => {
   return (
     <div
       className={`
@@ -13,8 +13,10 @@ const Modal = ({ isOpen, onClick }) => {
   ${isOpen ? "opacity-100" : "opacity-0"}
   `}
     >
-      
-      <AgregarTurno onClick={onClick} />
+      {
+        children
+      }
+   
     </div>
   );
 };
