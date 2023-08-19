@@ -117,13 +117,13 @@ const Admin = ({ shifts }) => {
         <Modal
           isOpen={isOpen}
           setIsOpen={setIsOpen}
-          children={<AgregarTurno onClick={openModal} />}
+          Children={<AgregarTurno onClick={openModal} />}
         />
 
         <Modal
           isOpen={isOpenHorarioModal}
           setIsOpen={setIsHorarioModal}
-          children={<ReservarHorario onClick={openModalHorario} />}
+          Children={<ReservarHorario onClick={openModalHorario} />}
         />
       </div>
     </>
