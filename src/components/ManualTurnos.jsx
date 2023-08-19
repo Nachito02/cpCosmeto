@@ -25,7 +25,7 @@ const ManualTurnos = ({turnos}) => {
           )}
         </div>
       );
-  )
+  
 }
 
 export default ManualTurnos
