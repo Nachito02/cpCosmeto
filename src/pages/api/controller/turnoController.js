@@ -105,6 +105,5 @@ export const addTurnoManual = async (body) => {
 
 export const getManualTurno = async () => {
   const turnos = await TurnoManual.find().populate("horario").populate("id_servicio");
-  console.log("turnos",turnos);
   return turnos;
 };

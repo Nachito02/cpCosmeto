@@ -131,7 +131,7 @@ export default Admin;
 export async function getServerSideProps(context) {
   const session = await getSession(context);
 
-  if (!session && session.user.email !== process.env.NEXT_PUCLIC_OWNER_EMAIL) {
+  if (!session && session?.user?.email !== process.env.NEXT_PUCLIC_OWNER_EMAIL) {
     return {
       redirect: {
         destination: "/",

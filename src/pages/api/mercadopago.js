@@ -31,7 +31,7 @@ export default async function handler(req, res) {
 
       const response = await mercadopago.preferences.create(preference);
       const preferenceId = response.body.id;
-      console.log(preferenceId);
+     // console.log(preferenceId);
       return res.status(200).json(preferenceId);
     } catch (error) {
       console.log(error);

@@ -1,7 +1,7 @@
 import { updateStatus } from "./controller/turnoController";
 
 export default async function handler(req, res) {
-  console.log(req.query);
+  //console.log(req.query);
   if (req.query.status === "approved") {
     try {
       const updated = await updateStatus(req.query.id);
