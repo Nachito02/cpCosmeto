@@ -2,7 +2,7 @@ import React from "react";
 import AgregarTurno from "./AgregarTurno";
 import { IoMdClose } from "react-icons/io";
 
-const Modal = ({ isOpen, onClick, Children }) => {
+const Modal = ({ isOpen, onClick, children }) => {
   return (
     <div
       className={`
@@ -14,7 +14,7 @@ const Modal = ({ isOpen, onClick, Children }) => {
   `}
     >
       {
-        <Children />
+        children
       }
    
     </div>
