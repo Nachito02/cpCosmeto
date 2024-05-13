@@ -67,12 +67,11 @@ export const handleReservation = async (req) => {
 };
 
 export const getTurnos = async () => {
-  const manualTurnos = await TurnoManual.find();
-
   const turnos = await Turno.find()
     .populate("id_servicio", "nombre precio")
-    .populate("id_cliente", "nombre correo apellido")
-    .populate("horario", "horario");
+    .populate("id_cliente", "nombre correo apellido number")
+    .populate("horario", "horario")
+    .sort({ fecha: 1 });
 
   return turnos;
 };
@@ -104,6 +103,9 @@ export const addTurnoManual = async (body) => {
 };
 
 export const getManualTurno = async () => {
-  const turnos = await TurnoManual.find().populate("horario").populate("id_servicio");
+  const turnos = await TurnoManual.find()
+    .populate("horario")
+    .populate("id_servicio")
+    .sort({ fecha: -1 });
   return turnos;
 };

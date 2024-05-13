@@ -18,10 +18,14 @@ const Turnos = ({ turnos }) => {
                 ? turno.nombre
                 : `${turno.id_cliente?.nombre} ${turno.id_cliente?.apellido}`}
             </p>
+            <p>Contacto: {turno.id_cliente?.number}</p>
+
             <p>Fecha: {format(new Date(turno.fecha), "dd/MM/yyyy")}</p>
             <p>Horario: {turno.horario.horario}</p>
             <p>Estado: {turno.estado}</p>
             <p>Servicio: {turno.id_servicio.nombre}</p>
+            <p>Precio: ${turno.id_servicio.precio}</p>
+
           </div>
         ))
       ) : (
